@@ -7,6 +7,38 @@ using namespace std;
 #define bigInt __int128
 #define ull unsigned long long
 
+// Next Element Greater Than 
+vector<int> NEG(vector<int>& vec) {
+
+    stack<int> stk; 
+    vector<int> ans(vec.size(), -1); 
+
+    for (int i = vec.size() - 1;i >= 0;i--) {
+        while (!stk.empty() && vec[i] > vec[stk.top()]) stk.pop(); // Next Greater
+        // while (!stk.empty() && vec[i] < vec[stk.top()]) stk.pop(); // Next Smaller
+        if (!stk.empty()) ans[i] = vec[stk.top()];
+        stk.push(i);
+    }
+
+    return ans; 
+} 
+
+// Prev Element Greater Than 
+vector<int> PEG(vector<int>& vec) {
+
+    stack<int> stk; 
+    vector<int> ans(vec.size(), -1); 
+
+    for (int i = 0;i < vec.size();i++) {
+        while (!stk.empty() && vec[i] > vec[stk.top()]) stk.pop(); // Prev Greater
+        // while (!stk.empty() && vec[i] < vec[stk.top()]) stk.pop(); // Prev Smaller
+        if (!stk.empty()) ans[i] = vec[stk.top()];
+        stk.push(i);
+    }
+
+    return ans; 
+} 
+
 
 int main() {
 
@@ -14,9 +46,6 @@ int main() {
         // freopen('input.txt', 'r', stdin);
         freopen("output.txt", "w", stdout);
     #endif
-
-
-    // 33  37  44  22  31  17  23  40  17  25
 
     //? Difference Array
     const int N = 10;
@@ -136,6 +165,50 @@ int main() {
         cout << '\n';
     }
 
+    //? Deque-based Sliding Window
+    vector<int> vec = {1, 5, 12, 7, 16, 2, 23, 40, 9, 17};
+    int l = 0, r = 2; // window size = 3
+    vector<int> ans(vec.size() - 2, -1);
+    deque<int> window;
+
+    // Initiat The Window
+    for (int i = l;i <= r;i++) {
+
+        while (!window.empty() && vec[window.back()] < vec[i]) window.pop_back();
+        
+        window.push_back(i);
+    }
+
+    l++;
+    r++;
+    ans[0] = vec[window.front()];
+
+    int size = vec.size();
+    while (r < size) {
+        
+        while (!window.empty() && vec[window.back()] < vec[r]) window.pop_back();
+        
+        if (window.front() < l) window.pop_front();
+        
+        if (!window.empty()) ans[l] = vec[window.front()];
+        else ans[l] = vec[r];
+        window.push_back(r);
+        
+
+        l++;
+        r++;
+    }
+
+    for (auto &e : ans) cout << e << ' ';
+
+    cout << "\n################\n";
+    
+    vector<int> ans2 = NEG(vec);
+    vector<int> ans3 = PEG(vec);
+    
+    for (auto &e : ans2) cout << e << ' ';
+    cout << "\n################\n";
+    for (auto &e : ans3) cout << e << ' ';
 
 
     return 0;

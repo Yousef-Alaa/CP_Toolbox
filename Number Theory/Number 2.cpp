@@ -41,18 +41,25 @@ ll powMod(ll x, ll y) {
     return res;
 }
 
+// Recursive Version
+ll powerMod(ll a , ll b) {
+    if (b == 0) return 1;
+    ll res = powerMod(a, b>>1);
+    res = ((res*res)%MOD * (b&1 ? a : 1))%MOD; 
+    return res;
+}
+
 
 inline ll add(ll a, ll b) { return ((a % MOD) + (b % MOD)) % MOD; }
 inline ll mul(ll a, ll b) { return ((a % MOD) * (b % MOD)) % MOD; }
 inline ll sub(ll a, ll b) { return (((a % MOD) - (b % MOD)) % MOD + MOD) % MOD; }
-inline ll divide(ll a, ll b) { return mul(a, powmod(b, MOD - 2)); }
+inline ll divide(ll a, ll b) { return mul(a, powMod(b, MOD - 2)); }
 
 
 vector<ll> fact, inv, factInv;
 
-void init(ll n, ll modVal) {
+void pre_process(ll n) {
 
-    MOD = modVal;
     inv.resize(n + 1);
     fact.resize(n + 1);
     factInv.resize(n + 1);
@@ -84,13 +91,11 @@ int main() {
         freopen("../output.txt", "w", stdout);
     #endif
 
-    init(33, MOD);
+    ll x = 1e9, y = 8000;
 
+    cout << powMod(x, y) << '\n';
+    cout << powerMod(x, y) << '\n';
 
-    cout << nCr(32, 16) << '\n';
-    cout << nPr(21, 11) << '\n';
-
-    // cout << 7219428434016265740ULL % MOD << '\n';
 
     return 0;
 }

@@ -5,105 +5,26 @@ using namespace std;
 #define ll long long
 #define ull unsigned long long
 
-string binary(ll n) {
-    
-    string ans;
+#define isPowerOf2(n) (n && !(n & (n - 1)))
+#define setBit(n, bit) n |= (1LL<<bit)
+#define checkBit(n, bit) ((n >> bit) & 1LL)
+#define clearBit(n, bit) n &= ~(1LL<<bit)
+#define toggleBit(n, bit) n ^= (1LL<<bit)
 
-    if (n == 0) return "0";
+#define clearLowest(n) n &= (n - 1)
+#define clearTrailOnes(n) n &= (n + 1) // 00110111 -> 00110000
+#define setLastCleared(n) n |= (n + 1) // 00110101 -> 00110111
 
-    while (n > 0) {
-        ans.push_back(char('0' + (n&1))); // n%2
-        n >>= 1; // n /= 2;
-    }
-    
+#define findLowest(n) (n == 0 ? -1 : __builtin_ctzll(n))// Should be greater than zero
+#define findHighest(n) (n == 0 ? -1 : 63 - __builtin_clzll(n)) // Should be greater than zero
+#define checkParity(n) __builtin_parityll(n) // odd_parity ? 1 : 0
+#define countBuiltIn(n)  __builtin_popcountll(n)
+#define hammingDistance(a, b) __builtin_popcountll(a ^ b) // How many bits are different
 
-    reverse(ans.begin(), ans.end());
-    return ans;
+int countInRange(ll n, int start, int end) {
+    ll mask = ((1LL << (end+1)) - 1) ^ ((1LL << start) - 1);
+    return countBuiltIn(n & mask);
 }
-
-bool checkParity(ll n) {
-    /*
-        Checks the Parity of a number.
-        Returns true(1) if the number has odd parity(odd number of set bits)
-        else it returns false(0) for even parity(even number of set bits).
-    */
-    return __builtin_parityll(n);
-
-}
-
-bool checkBit(ll n, int bit) {
-    return (n >> bit) & 1LL;
-}
-
-ll setBit(ll n, int bit) {
-    return n | (1LL<<bit);
-}
-
-ll clearBit(ll n, int bit) {
-    return n & ~(1LL<<bit);
-}
-
-ll toggleBit(ll n, int bit) {
-    return n ^ (1LL<<bit);
-}
-
-bool isPowerOf2(ll n) {
-    if (n == 0) return false;
-    return !(n & (n - 1));
-}
-
-// Find Lowest Set Bit
-int findLowest(ll n) {
-
-    int count = -1; // in case of 0 there's no set bits
-    ll x = n & -n;
-
-    while(x) {
-        x >>= 1; //x /= 2;
-        count++;
-    }
-
-    return count; 
-}
-
-int findLowestBuiltIn(ll n) {
-    if (n == 0) return -1;
-    return __builtin_ctzll(n);// count Trainling zeros
-}
-
-// Clear Lowest Set Bit
-ll clearLowest(ll n) {
-    return n & (n - 1);
-}
-
-int findHighest(int n) {
-    if (n == 0) return -1;
-    return 31 - __builtin_clz(n); // count leading zeros
-}
-
-int findHighest(ll n) {
-    if (n == 0) return -1;
-    return 63 - __builtin_clzll(n); // count leading zeros
-}
-
-int countBuiltIn(ll n) {
-    return __builtin_popcountll(n);
-}
-
-int countSetBits(ll n) {
-    int count = 0;
-    while (n) {
-        n = n & (n-1);
-        count++;
-    }
-    return count;
-}
-
-// How many bits are different
-int hammingDistance(ll a, ll b) {
-    return __builtin_popcountll(a ^ b);
-}
-
 
 ll xorFrom0ToN(ll n) {
     if (n%4 == 0) return n;
@@ -121,7 +42,43 @@ ll xorFrom0ToN(ll n) {
                 then A + B = A^B if carry = zero (in other form if A&B is zero)
 */
 
+string binary(ll n) {
+    
+    string ans;
 
+    if (n == 0) return "0";
+
+    while (n > 0) {
+        ans.push_back(char('0' + (n&1))); // n%2
+        n >>= 1; // n /= 2;
+    }
+    
+
+    reverse(ans.begin(), ans.end());
+    return ans;
+}
+
+int findLowest_Iterative(ll n) {
+
+    int count = -1; // in case of 0 there's no set bits
+    ll x = n & -n;
+    while(x) {
+        x >>= 1; // x /= 2;
+        count++;
+    }
+    return count; 
+}
+
+int countSetBits(ll n) {
+    int count = 0;
+    while (n) {
+        n = n & (n-1);
+        count++;
+    }
+    return count;
+}
+
+void BitSetLib();
 
 int main() {
 
@@ -130,10 +87,58 @@ int main() {
         freopen("output.txt", "w", stdout);
     #endif
 
+    ll num = 457;
+    // 111001001
+    // 876543210
+
+    cout << "R -> " << countInRange(num, 3, 6) << '\n';
 
 
+    // BitSetLib();
 
 
+    //? Prefix
+    const int N = 5;
+    int pref[N][32];
+    unsigned int arr[N] = {1, 11, 5, 15, 7};
+    /*
+        0001
+        1011
+        0101
+        1111
+        0111
+    */
+
+
+    for (int i = 0;i < N;i++) {
+        for (int bit = 0;bit < 32;bit++) {
+            pref[i][bit] = checkBit(arr[i], bit);
+            if (i > 0) pref[i][bit] += pref[i - 1][bit];
+        }
+    }
+
+    int l = 2, r = 4, OR = 0, AND = 0, XOR = 0;
+
+    for (int bit = 0;bit < 32;bit++) {
+
+        int bitCount = pref[r][bit];
+        if (l > 0) bitCount -= pref[l-1][bit];
+
+        if (bitCount > 0) setBit(OR, bit);
+        if (bitCount == (r-l+1)) setBit(AND, bit);
+        if (bitCount & 1) setBit(XOR, bit);
+
+    }
+
+    cout << "AND = " << AND << '\n';
+    cout << "XOR = " << XOR << '\n';
+    cout << "OR  = " << OR << '\n';
+
+
+}
+
+
+void BitSetLib() {
     // ?Bitset
     /*
     | Operation       | Description                           |
@@ -204,50 +209,5 @@ int main() {
     cout << a4 << '\n';
     decrement(a4);
     cout << a4 << '\n';
-
-
-
-
-
-
-
-
-    // ?Prefix
-    const int N = 5;
-    int pref[N][32];
-    unsigned int arr[N] = {1, 11, 5, 15, 7};
-    /*
-        0001
-        1011
-        0101
-        1111
-        0111
-    */
-
-
-    for (int i = 0;i < N;i++) {
-        for (int bit = 0;bit < 32;bit++) {
-            pref[i][bit] = checkBit(arr[i], bit);
-            if (i > 0) pref[i][bit] += pref[i - 1][bit];
-        }
-    }
-
-    int l = 2, r = 4, OR = 0, AND = 0, XOR = 0;
-
-    for (int bit = 0;bit < 32;bit++) {
-
-        int bitCount = pref[r][bit];
-        if (l > 0) bitCount -= pref[l-1][bit];
-
-        if (bitCount > 0) OR = setBit(OR, bit);
-        if (bitCount == (r-l+1)) AND = setBit(AND, bit);
-        if (bitCount & 1) XOR = setBit(XOR, bit);
-
-    }
-
-    cout << "AND = " << AND << '\n';
-    cout << "XOR = " << XOR << '\n';
-    cout << "OR  = " << OR << '\n';
-
-
+    
 }
