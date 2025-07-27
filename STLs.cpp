@@ -100,6 +100,11 @@ void SET() {
         cout << "Element found" << endl;
     else cout << "Element Not found" << endl;
     cout << s.size();
+
+    vector<int> v = {5, 1, 2, 5, 3, 2, 4};
+
+    // Make a set from vector (removes duplicates and sorts)
+    set<int> setFromV(v.begin(), v.end()); // O( n*log(n) )
     
 
     //? Multiset
@@ -373,7 +378,7 @@ int main() {
     #endif
 
 
-    // SET();
+    SET();
     MAP();
     // LIST();
     // Others();

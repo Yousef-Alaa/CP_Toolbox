@@ -7,17 +7,10 @@ using namespace std;
 
 int MOD = 1e9 + 7;
 
-
-
-int inverse(int a) {
-    return a <= 1 ? a : MOD - (int)(MOD / a) * inverse(MOD % a) % MOD;
-}
-
-
 /*
     Binary exponentiation
     calc a^b
-    Takes O(log b) instead of (b)
+    Takes O(log b) instead of O(b)
 */
 ll power(ll a, ll b) {
     ll result = 1;
@@ -30,59 +23,141 @@ ll power(ll a, ll b) {
 }
 
 // Similar to power() but return the answer % MOD
-ll powMod(ll x, ll y) {
+ll powMod(ll x, ll y, ll mod = MOD) {
     ll res = 1;
-    x %= MOD;
-    while (y) {
-        if (y & 1) res = (res * x) % MOD;
-        x = (x * x) % MOD;
+    x %= mod;
+    while (y > 0) {
+        if (y & 1) res = (res * x) % mod;
+        x = (x * x) % mod;
         y >>= 1;
     }
     return res;
 }
 
 // Recursive Version
-ll powerMod(ll a , ll b) {
+ll powerMod(ll a , ll b, ll mod = MOD) {
     if (b == 0) return 1;
     ll res = powerMod(a, b>>1);
-    res = ((res*res)%MOD * (b&1 ? a : 1))%MOD; 
+    res = ((res*res)%mod * (b&1 ? a : 1))%mod; 
     return res;
 }
 
 
-inline ll add(ll a, ll b) { return ((a % MOD) + (b % MOD)) % MOD; }
-inline ll mul(ll a, ll b) { return ((a % MOD) * (b % MOD)) % MOD; }
-inline ll sub(ll a, ll b) { return (((a % MOD) - (b % MOD)) % MOD + MOD) % MOD; }
-inline ll divide(ll a, ll b) { return mul(a, powMod(b, MOD - 2)); }
+ll add(ll a, ll b, ll mod = MOD) { return ((a % mod) + (b % mod)) % mod; }
+ll mul(ll a, ll b, ll mod = MOD) { return ((a % mod) * (b % mod)) % mod; }
+ll sub(ll a, ll b, ll mod = MOD) { return (((a % mod) - (b % mod)) % mod + mod) % mod; }
+ll divide(ll a, ll b, ll mod = MOD) { return mul(a, powMod(b, mod - 2, mod)); }
 
 
-vector<ll> fact, inv, factInv;
+// Good for n > 1e6
+// O(k * log³ n) where k is the number of bases used
+bool mayBePrime(ll n) {
+    
+    if (n < 2) return false;
+    if (n == 2 || n == 3) return true;
+    if (n % 2 == 0) return false;
 
-void pre_process(ll n) {
+    ll d = n - 1;
+    int r = 0;
+    while (d % 2 == 0) {
+        d /= 2;
+        r++;
+    }
 
-    inv.resize(n + 1);
-    fact.resize(n + 1);
-    factInv.resize(n + 1);
+    vector<ll> bases = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
 
-    fact[0] = factInv[0] = 1;
-    if (n >= 1) inv[1] = 1;
+    for (ll a : bases) {
+        if (a >= n) break;
+        ll x = powMod(a, d, n);
+        if (x == 1 || x == n - 1) continue;
 
-    for (ll i = 1; i <= n; i++) fact[i] = fact[i - 1] * i % MOD;
+        bool ok = false;
+        for (int i = 0; i < r - 1; i++) {
+            x = mul(x, x, n);
+            if (x == n - 1) {
+                ok = true;
+                break;
+            }
+        }
+        if (!ok) return false;
+    }
 
-    for (ll i = 2; i <= n; i++) inv[i] = MOD - (MOD / i) * inv[MOD % i] % MOD;
-
-    for (ll i = 1; i <= n; i++) factInv[i] = factInv[i - 1] * inv[i] % MOD;
+    return true;
 }
 
-ll nCr(ll n, ll r) { // max `non-mod` result -> n = 32
-    if (r < 0 || r > n) return 0;
-    return fact[n] * factInv[r] % MOD * factInv[n - r] % MOD;
+int inverse(int a, int mod = MOD) {
+    return a <= 1 ? a : mod - (int)(mod / a) * inverse(mod % a) % mod;
 }
 
-ll nPr(ll n, ll r) { // max `non-mod` result -> n = 20
-    if (r < 0 || r > n) return 0;
-    return fact[n] * factInv[n - r] % MOD;
+// find φ(n) in O(sqrt(n))
+int phi(int n) {
+    
+    int result = n;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) {
+            while (n % i == 0) n /= i;
+            result -= result / i;
+        }
+    }
+
+    if (n > 1) result -= result / n;
+    
+    return result;
 }
+
+// Compute from φ(1) to φ(n) in O(n*loglog(n))
+void compute_phi(int n) {
+    
+    vector<int> phi(n + 1);
+
+    for (int i = 0; i <= n; i++) phi[i] = i;
+
+    for (int i = 2; i <= n; i++) {
+        if (phi[i] == i) {
+            for (int j = i; j <= n; j += i) phi[j] -= phi[j] / i;
+        }
+    }
+}
+
+// find μ(n) in O(sqrt(n))
+int mobius(int n) {
+
+    int mebVal = -1;
+    for(int i = 2; i * i <= n; i++) {
+        if(n % i == 0) {
+            if (n % (i*i) == 0) return 0;
+            n /= i, mebVal = -mebVal;
+        }
+    }
+
+    if (n) mebVal = -mebVal;
+
+    return mebVal;
+}
+
+// Compute from μ(1) to μ(n) in O(n*loglog(n))
+const int MAX = 1e6;
+vector<int> mob(MAX+1, -1);
+void compute_mobius() {
+
+    vector<bool> prime(MAX+1, true);
+
+    mob[1] = 1;
+
+    for (ll i = 2; i <= MAX; i++) {
+        if (prime[i]) {
+            mob[i] = 1;
+            for (ll j = 2 * i; j <= MAX; j += i) {
+                prime[j] = false;
+                if (j % (i * i) == 0) mob[j] = 0;
+                else mob[j] = -mob[j];
+            }
+        }
+    }
+
+
+}
+
 
 int main() {
 
@@ -91,11 +166,13 @@ int main() {
         freopen("../output.txt", "w", stdout);
     #endif
 
-    ll x = 1e9, y = 8000;
+    compute_mobius();
 
-    cout << powMod(x, y) << '\n';
-    cout << powerMod(x, y) << '\n';
+    for (int i = 0;i <= 1e6;i++) {
+        if (mobius(i) != mob[i]) cout << "Error in I = " << i << '\n';
+    }
 
+    cout << "Finished !!";
 
     return 0;
 }
