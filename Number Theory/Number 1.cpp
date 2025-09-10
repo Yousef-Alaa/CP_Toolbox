@@ -303,7 +303,7 @@ vector<int> SPF(int n) {
 
 
 // Prime Factors for a single Number
-// Time: O(logN) and O(N) for SPF() So total = O( n*log(N) )
+// Time: O(logN)
 void primeFactorsSPF(int n) {
 
     vector<int> spf = SPF(n);
@@ -362,6 +362,7 @@ void computeDivisors(int n) {
     }
 
     // Print
+    // NOTE: Sorted by default
     for (int i = 0;i <= n;i++) {
         cout << i << " Divs: ";
         for (auto v : divs[i]) cout << v << ' ';
@@ -439,6 +440,7 @@ ll gcd(ll a, ll b) {
     lcm(0, n) = 0
     lcm(1, n) = n
     lcm(n, n) = n
+    lcm(n, n+1) = n*(n+1)
 */
 ll lcm(ll a, ll b) {
     return a * b / gcd(a, b);
@@ -551,7 +553,7 @@ int main() {
         freopen("../output.txt", "w", stdout);
     #endif
 
-    
+    cout << "X";
 
     return 0;
 }

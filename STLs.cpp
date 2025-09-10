@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// The main definitions to use ordered set, map
+// The main definitions to use ordered set, map and gp_hash_table
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace __gnu_pbds;
@@ -21,9 +21,21 @@ struct Compare {
     }
 };
 
+struct custom_hash {
+    static uint64_t splitmix64(uint64_t x) {
+        x += 0x9e3779b97f4a7c15;
+        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+        return x ^ (x >> 31);
+    }
+    size_t operator()(uint64_t x) const {
+        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+        return splitmix64(x + FIXED_RANDOM);
+    }
+};
+
 
 // *************************** priority_queue ********************************
-
 
 void priorityQueue() {
 
@@ -47,10 +59,11 @@ void priorityQueue() {
     
 }
 
+
 // *************************** Set *********************************
 
-template<class T>
-using ordered_set = tree <T, null_type, less_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
+template<typename Key> using hash_set = gp_hash_table<Key, null_type, custom_hash>;
+template<class T> using ordered_set = tree <T, null_type, less_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
 // Function to erase an element from the ordered set
 template<typename T>
@@ -158,13 +171,26 @@ void SET() {
 
     // cout << os.order_of_key(8) << '\n';
     // cout << *os.find_by_order(5) << '\n';
+
+    //? Hash Set
+    // Not Sorted
+    hash_set<int> st;
+    vector<int> v = {1, 4, 11, 1, 7, 1, 5, 7, 44, 2};
+
+    for (int e : v) st.insert(e);
+
+    if (st.find(7) != st.end()) cout << "Have 7\n";
+    if (st.find(77) == st.end()) cout << "Don't Have 77\n";
+    st.erase(7);
+    if (st.find(7) != st.end()) cout << "Have 7\n";
+    for (auto e : st) cout << e << '\n';
 }
 
 
 // *************************** Map *********************************
 
-template <typename Key, typename Value>
-using ordered_map = tree<Key, Value, less<Key>, rb_tree_tag, tree_order_statistics_node_update>;
+template <typename Key, typename Val> using hash_map = gp_hash_table<Key, Val, custom_hash>;
+template <typename Key, typename Val> using ordered_map = tree<Key, Val, less<Key>, rb_tree_tag, tree_order_statistics_node_update>;
 
 void MAP() {
 
@@ -204,15 +230,25 @@ void MAP() {
     // Sort Based On Key and Value
     multimap<string, int> mmp;
     
-    // mmp.insert({"jo", 11});
-    // mmp.insert({"alaa", 111});
-    // mmp.insert({"omar", 15});
-    // mmp.insert({"hossam", -10});
-    // mmp.insert({"jo", 118}); //* Now it Will Work
-    // mmp.erase("hossam");
+    mmp.insert({"jo", 11});
+    mmp.insert({"alaa", 111});
+    mmp.insert({"omar", 15});
+    mmp.insert({"hossam", -10});
+    mmp.insert({"jo", 118}); //* Now it Will Work
+    mmp.insert({"jo", 18});
+    mmp.erase("hossam");
     // mmp["jo"]++;//! Not Supported
     
     // for (auto it : mmp) cout << it.first << ' ' << it.second << '\n';
+
+    string key = "jo";  // we want all values with first == 1
+
+    // equal_range gives [first, second) covering all elements with key == 1
+    auto range = mmp.equal_range(key); // O(logn + k)
+
+    for (auto it = range.first; it != range.second; ++it) {
+        cout << "(" << it->first << ", " << it->second << ")\n";
+    }
     
     //? Unordered Map
     // Key is unique
@@ -255,7 +291,16 @@ void MAP() {
     cout << om.find_by_order(0)->first << '\n';
     cout << om.find_by_order(0)->second << '\n';
     
-    for (auto it : om) cout << it.first << ' ' << it.second << '\n';
+    // for (auto it : om) cout << it.first << ' ' << it.second << '\n';
+
+    //? Hash Map
+    // Key is unique
+    // No Sort
+    hash_map<int, int> freq;
+    vector<int> v = {1, 4, 11, 1, 7, 1, 5, 7, 44, 2};
+    for (int e : v) freq[e]++;
+    freq.erase(11);
+    for (auto e : freq) cout << e.first << ' ' << e.second << '\n';
 
 }
 
@@ -373,15 +418,15 @@ void Others() {
 int main() {
 
     #ifndef ONLINE_JUDGE
-        // freopen('input.txt', 'r', stdin);
+        // freopen("input.txt", "r", stdin);
         freopen("output.txt", "w", stdout);
     #endif
 
 
-    SET();
-    MAP();
+    // SET();
+    // MAP();
     // LIST();
-    // Others();
+    Others();
     // priorityQueue();
 
     return 0;

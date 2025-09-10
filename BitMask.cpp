@@ -21,7 +21,7 @@ using namespace std;
 #define countBuiltIn(n)  __builtin_popcountll(n)
 #define hammingDistance(a, b) __builtin_popcountll(a ^ b) // How many bits are different
 
-int countInRange(ll n, int start, int end) {
+int countInRange(ll n, int start, int end) { // End Included
     ll mask = ((1LL << (end+1)) - 1) ^ ((1LL << start) - 1);
     return countBuiltIn(n & mask);
 }
@@ -83,7 +83,7 @@ void BitSetLib();
 int main() {
 
     #ifndef ONLINE_JUDGE
-        // freopen('input.txt', 'r', stdin);
+        // freopen("input.txt", "r", stdin);
         freopen("output.txt", "w", stdout);
     #endif
 
@@ -91,7 +91,7 @@ int main() {
     // 111001001
     // 876543210
 
-    cout << "R -> " << countInRange(num, 3, 6) << '\n';
+    cout << "R -> " << countInRange(num, 3, 7) << '\n';
 
 
     // BitSetLib();

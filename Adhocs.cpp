@@ -7,7 +7,7 @@ using namespace std;
 #define bigInt __int128
 #define ull unsigned long long
 
-// Next Element Greater Than 
+// Next Element Greater/Smaller Than 
 vector<int> NEG(vector<int>& vec) {
 
     stack<int> stk; 
@@ -23,7 +23,7 @@ vector<int> NEG(vector<int>& vec) {
     return ans; 
 } 
 
-// Prev Element Greater Than 
+// Prev Element Greater/Smaller Than 
 vector<int> PEG(vector<int>& vec) {
 
     stack<int> stk; 
@@ -39,11 +39,32 @@ vector<int> PEG(vector<int>& vec) {
     return ans; 
 } 
 
+string letters = "0123456789ABCDEF"; 
+ll toInt(char c) { 
+    return letters.find(c); 
+} 
+
+ll BasetoDecimal(string in, ll base) { 
+    ll res = 0; 
+    ll siz = in.size(); 
+    for(int i = 0;i < siz;i++) res *= base, res += toInt(in[i]); 
+    return res; 
+} 
+
+string DecimaltoBase(ll number, ll base) { 
+    if (number == 0) 
+        return "0"; 
+    string res = ""; 
+    for (; number; number /= base) 
+        res = letters[number % base] + res; 
+    return res; 
+}
+
 
 int main() {
 
     #ifndef ONLINE_JUDGE
-        // freopen('input.txt', 'r', stdin);
+        // freopen("input.txt", "r", stdin);
         freopen("output.txt", "w", stdout);
     #endif
 
