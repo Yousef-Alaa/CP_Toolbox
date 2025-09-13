@@ -63,7 +63,7 @@ void priorityQueue() {
 // *************************** Set *********************************
 
 template<typename Key> using hash_set = gp_hash_table<Key, null_type, custom_hash>;
-template<class T> using ordered_set = tree <T, null_type, less_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
+template<typename T> using ordered_set = tree <T, null_type, less_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
 // Function to erase an element from the ordered set
 template<typename T>
