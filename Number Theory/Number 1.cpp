@@ -8,6 +8,8 @@ using namespace std;
 #define ull unsigned long long
 #define vll vector<ll>
 
+const int N = 1e7;
+
 /*
 
 Max and Min Values
@@ -70,29 +72,28 @@ bool isPrime(int n) {
 // 1e8 -> 1s
 // 1e7 -> 77ms
 // 1e6 -> 31ms
-void sieve(int n) {
+void sieve() {
     
     /*
     Note: You can use Bitset instead of vector<bool> (More Faster)
     
-    const int N = 1e7 + 1;
     bitset<N> isPrime;
     isPrime.set(); // And continue
     
     */
     vector<int> primes;
-    vector<bool> isPrime(n + 1, true);
+    vector<bool> isPrime(N + 1, true);
     
     isPrime[0] = isPrime[1] = false;
 
-    for (int i = 2;i*i <= n;i++) {
+    for (int i = 2;i*i <= N;i++) {
         if (isPrime[i]) {
-            for (ll j = 1LL*i*i;j <= n;j+=i) isPrime[j] = false;
+            for (ll j = 1LL*i*i;j <= N;j+=i) isPrime[j] = false;
         }
     }
     
     // if you need array of primes
-    for (int i = 2;i <= n;i++) {
+    for (int i = 2;i <= N;i++) {
         if (isPrime[i]) primes.push_back(i);
     }
 
@@ -101,17 +102,17 @@ void sieve(int n) {
 
 // Max N is 10^7 – 10^8
 // Time: O(N) because number not marked multiple times
-vector<int> linearSieve(int n) {
+vector<int> linearSieve() {
 
 
     // Return any of theme
     vector<int> primes;
-    vector<int> spf(n+1);
-    vector<bool> isPrime(n+1, true);
+    vector<int> spf(N+1);
+    vector<bool> isPrime(N+1, true);
 
     isPrime[0] = isPrime[1] = false;
     
-    for (int i = 2; i <= n; i++) {
+    for (int i = 2; i <= N; i++) {
 
         if (isPrime[i]) {
             spf[i] = i;
@@ -119,7 +120,7 @@ vector<int> linearSieve(int n) {
         }
 
         for (int p : primes) {
-            if (p > spf[i] || 1LL * p * i > n) break;
+            if (p > spf[i] || 1LL * p * i > N) break;
             spf[p * i] = p;
             isPrime[p * i] = false;
         }
@@ -130,7 +131,10 @@ vector<int> linearSieve(int n) {
 
 
 // takes 0.5s for n = 1e9  O( N*loglog(N) )
-pair<vector<bool>, vector<int>> bigSieve(const int N, const int Q = 17, const int L = 1 << 15) {
+pair<vector<bool>, vector<int>> bigSieve() {
+    
+    const int Q = 17;
+    const int L = 1 << 15
     static const int rs[] = {1, 7, 11, 13, 17, 19, 23, 29};
     struct P { 
         P(int p) : p(p) {}
@@ -351,70 +355,23 @@ vector<int> findDivisors(int n, bool srt = false) {
 }
 
 // Find Divisors from 0 to n (Anti sieve) O( n*log(N) )
-void computeDivisors(int n) {
+void computeDivisors() {
 
-    vector<vector<int>> divs(n+1, vector<int>(1, 1));
+    vector<vector<int>> divs(N+1, vector<int>(1, 1));
     
-    for (int i = 2;i <= n;i++) {
-        for (int j = i;j <= n;j+=i) {
+    for (int i = 2;i <= N;i++) {
+        for (int j = i;j <= N;j+=i) {
             divs[j].push_back(i);
         }
     }
 
     // Print
     // NOTE: Sorted by default
-    for (int i = 0;i <= n;i++) {
+    for (int i = 0;i <= N;i++) {
         cout << i << " Divs: ";
         for (auto v : divs[i]) cout << v << ' ';
         cout << '\n';
     }
-}
-
-// Time: O(sqrt(N))
-ll countDivisors(ll num) {
-    
-    ll total = 1;
-    for (ll i = 2; i * i <= num; i++) {
-        if (num % i == 0) {
-            int e = 0;
-            do {
-                e++;
-                num /= i;
-            } while (num % i == 0);
-            total *= e + 1;
-        }
-    }
-
-    if (num > 1) total *= 2;
-    
-    return total;
-}
-
-// Time: O(sqrt(N))
-ll sumOfDivisors(ll num) {
-
-    ll total = 1;
-
-    for (ll i = 2; i * i <= num; i++) {
-        if (num % i == 0) {
-            int e = 0;
-            do {
-                e++;
-                num /= i;
-            } while (num % i == 0);
-
-            ll sum = 0, pow = 1;
-            do {
-                sum += pow;
-                pow *= i;
-            } while (e-- > 0);
-            total *= sum;
-        }
-    }
-
-    if (num > 1) total *= (1 + num);
-    
-    return total;
 }
 
 /*
