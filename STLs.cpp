@@ -63,16 +63,15 @@ void priorityQueue() {
 // *************************** Set *********************************
 
 template<typename Key> using hash_set = gp_hash_table<Key, null_type, custom_hash>;
-template<typename T> using ordered_set = tree <T, null_type, less_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
+template<typename T> using ordered_set = tree <T, null_type, greater_equal<T>, rb_tree_tag, tree_order_statistics_node_update>;
 
 // Function to erase an element from the ordered set
 template<typename T>
 void Erase(ordered_set<T> &s, T val) {
     int order = s.order_of_key(val);
     auto it = s.find_by_order(order);
-    if (it != s.end()) {
-        s.erase(it);
-    }
+    // if (it != s.end()) s.erase(it); // lower_bound
+    if (it != s.end() && *it == val) s.erase(it); // Exactly remove
 }
 
 
@@ -93,6 +92,7 @@ void SET() {
     s.insert(18);
 
     s.erase(5); //* O(logn)
+
     for (auto &e : s) cout << e << ' ';
     cout << '\n';
     for (auto it = s.begin(); it != s.end(); it++) cout << *it << ' ';
@@ -102,88 +102,90 @@ void SET() {
     cout << *s.rbegin() << '\n';
     cout << *next(s.begin(), 1) << '\n';
     cout << *next(s.begin(), 2) << '\n';
-    cout << *prev(s.rbegin(), 1) << '\n';
+    auto it = next(s.begin(), 3);
+    cout << *prev(it, 2) << '\n';
+    cout << *next(s.rbegin(), 2) << '\n';
 
     // Searching in a set
     if (s.find(12) != s.end()) //* O(logn)
-        cout << "Element found" << endl;
-    else cout << "Element Not found" << endl;
+        cout << "Element found\n";
+    else cout << "Element Not found\n";
     
     if (s.count(12))
-        cout << "Element found" << endl;
-    else cout << "Element Not found" << endl;
-    cout << s.size();
+        cout << "Element found\n";
+    else cout << "Element Not found\n";
 
     vector<int> v = {5, 1, 2, 5, 3, 2, 4};
 
     // Make a set from vector (removes duplicates and sorts)
     set<int> setFromV(v.begin(), v.end()); // O( n*log(n) )
     
+    cout << "###############\n";
+    
 
     //? Multiset
     // Not Unique
     // Sorted
-    // multiset<int> ms = {41, 5, 8, 8, 5, -4, 2, 0};
+    multiset<int> ms = {41, 5, 8, 8, 5, -4, 2, 0};
     
-    // for (auto &e : ms) cout << e << ' ';
-    // cout << '\n';
+    for (auto &e : ms) cout << e << ' ';
+    cout << '\n';
     
-    // ms.erase(5); // will erase all
-    // ms.erase( ms.find(8) ); // will erase first one
-    // for (auto &e : ms) cout << e << ' ';
-    // cout << '\n';
-
-    // if (ms.find(41) != ms.end()) // O(1)
-    //     cout << "Element found" << endl;
-    // else cout << "Element Not found" << endl;
-
+    ms.erase(5); // will erase all
+    ms.erase( ms.find(8) ); // will erase first one
+    ms.extract(8); // will erase first one
+    for (auto &e : ms) cout << e << ' ';
+    cout << "\n###############\n";
+    
+    
     //? Unordered Set
     // Unique
     // Not Sorted
     // use hash table and Not Prefered to use in problems
     // unordered_set<int> us = {41, 5, 8, 8, 5, -4, 2, 0};
-    // for (auto &e : us) cout << e << ' ';
-    // cout << '\n';
+
     // if (us.find(41) != us.end()) // O(1)
-    //     cout << "Element found" << endl;
-    // else cout << "Element Not found" << endl;
+    //     cout << "Element found\n";
+    // else cout << "Element Not found\n";
+    // cout << "\n###############\n";
+
 
     //? Ordered Set
     // Unique
     // Sorted
     // Add Index Functionality
-    // ordered_set<int> os; //! os = {1, 2, 3} not supported
+    ordered_set<int> os; //! os = {1, 2, 3} not supported
 
-    // os.insert(1);
-    // os.insert(3);
-    // os.insert(2);
-    // os.insert(1);
-    // os.insert(3);
-    // os.insert(5);
-    // os.insert(8);
-    // os.insert(-3);
+    os.insert(1);
+    os.insert(3);
+    os.insert(2);
+    os.insert(1);
+    os.insert(3);
+    os.insert(5);
+    os.insert(8);
+    os.insert(-3);
 
     // os.erase(-3); //! not supported
-    // Erase(os, -3);
+    Erase(os, -3);
 
-    // for (auto &e : os) cout << e << ' ';
-    // cout << '\n';
+    for (auto &e : os) cout << e << ' ';
+    cout << '\n';
 
-    // cout << os.order_of_key(8) << '\n';
-    // cout << *os.find_by_order(5) << '\n';
+    cout << os.order_of_key(8) << '\n';
+    cout << *os.find_by_order(5) << '\n';
 
     //? Hash Set
     // Not Sorted
-    hash_set<int> st;
-    vector<int> v = {1, 4, 11, 1, 7, 1, 5, 7, 44, 2};
+    // hash_set<int> st;
+    // vector<int> v = {1, 4, 11, 1, 7, 1, 5, 7, 44, 2};
 
-    for (int e : v) st.insert(e);
+    // for (int e : v) st.insert(e);
 
-    if (st.find(7) != st.end()) cout << "Have 7\n";
-    if (st.find(77) == st.end()) cout << "Don't Have 77\n";
-    st.erase(7);
-    if (st.find(7) != st.end()) cout << "Have 7\n";
-    for (auto e : st) cout << e << '\n';
+    // if (st.find(7) != st.end()) cout << "Have 7\n";
+    // if (st.find(77) == st.end()) cout << "Don't Have 77\n";
+    // st.erase(7);
+    // if (st.find(7) != st.end()) cout << "Have 7\n";
+    // for (auto e : st) cout << e << '\n';
 }
 
 
@@ -241,9 +243,9 @@ void MAP() {
     
     // for (auto it : mmp) cout << it.first << ' ' << it.second << '\n';
 
-    string key = "jo";  // we want all values with first == 1
+    string key = "jo";  // we want all values with first = "jo"
 
-    // equal_range gives [first, second) covering all elements with key == 1
+    // equal_range gives [first, second) covering all elements with key = "jo"
     auto range = mmp.equal_range(key); // O(logn + k)
 
     for (auto it = range.first; it != range.second; ++it) {
@@ -423,10 +425,10 @@ int main() {
     #endif
 
 
-    // SET();
+    SET();
     // MAP();
     // LIST();
-    Others();
+    // Others();
     // priorityQueue();
 
     return 0;

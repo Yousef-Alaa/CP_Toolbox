@@ -1,3 +1,17 @@
+# <span style="color: #1ABC9C;font-style: italic;">Max SubArray</span>
+
+``` cpp
+vector<ll> arr = {-1, 2, 4, -3, 5, 2, -10, 2, 5};
+
+ll sum = 0;
+ll ans = LLONG_MIN;
+for (int i = 0;i < n;i++) {
+	sum = max(arr[i], sum + arr[i]);
+	ans = max(ans, sum);
+}
+cout << ans; // 10
+```
+
 # <span style="color: #1ABC9C;font-style: italic;">Deque-based Sliding Window</span>
 
 ``` cpp

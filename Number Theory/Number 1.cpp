@@ -384,8 +384,12 @@ void computeDivisors() {
     gcd(n, n + 2^x) = 1 (if n is odd)
     gcd(ka, kb) = |k| ⋅ gcd(a, b)
     gcd(−a, b) = gcd(a, b) // ignores the sign
+    gcd(x, y, z, k) = gcd(x - y, y, z, k)
 */
 ll gcd(ll a, ll b) {
+
+    a = abs(a);
+    b = abs(b);
 
     if (b > a) swap(a, b);
 
