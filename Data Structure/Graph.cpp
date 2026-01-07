@@ -4,6 +4,7 @@ using namespace std;
 #define ll long long
 
 typedef vector<int> vint;
+typedef vector<long long> vll;
 
 int N = 20;
 vector<vint> adj;
@@ -63,7 +64,6 @@ bool dfsCycle(int node, int parent) {
 }
 
 
-
 stack<int> topo_sort;
 vector<bool> rec_stack(N);
 // Return true if detect a cycle (Directed)
@@ -116,6 +116,36 @@ void topoSortLex() {
 
 }
 
+
+void dijkstra() {
+
+
+    vint parent(N + 1, -1);
+    vll cost(N + 1, 1e18);
+    priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<>> pq; // cost, node
+
+
+    pq.push({0, 1});
+    cost[1] = 0;
+
+    while (!pq.empty()) {
+        
+        auto [c, node] = pq.top();
+        pq.pop();
+
+        if (cost[node] < c) continue;
+
+        for (auto [it, cs] : adj[node]) {
+            if (c + cs < cost[it]) {
+                parent[it] = node;
+                cost[it] = c + cs;
+                pq.push({c + cs, it});
+            }
+        }
+
+    }
+
+}
 
 
 int main() {
