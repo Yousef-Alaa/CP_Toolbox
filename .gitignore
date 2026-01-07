@@ -1,5 +1,6 @@
 .vscode/
 *.exe
+*.run
 input.txt
 output.txt
 .obsidian

@@ -54,6 +54,16 @@ ll countPerfSqrs(ll l, ll r) {
     return upper - lower + 1;
 }
 
+// count how many p in n!
+ll legendreFormula(ll n, ll p) {
+    ll cnt = 0;
+    while (n > 0) {
+        n /= p;
+        cnt += n;
+    }
+    return cnt;
+}
+
 // Check If Prime O(sqrt(N)) // Good for n < 1e6
 bool isPrime(int n) {
     
@@ -352,6 +362,30 @@ vector<int> findDivisors(int n, bool srt = false) {
 
     return divs;
 
+}
+
+// Count Divisors for single number O(logN)
+ll countDivisors(int n) {
+
+    vector<int> spf = SPF(n);
+    
+    ll ans = 1;
+    int prime, count;
+
+    
+    while(n != 1) {
+        count = 0;
+        prime = spf[n];
+        
+        while(n % prime == 0){
+            count++;
+            n /= prime;
+        }
+        
+        ans *= (count + 1);
+    }
+
+    return ans;
 }
 
 // Find Divisors from 0 to n (Anti sieve) O( n*log(N) )

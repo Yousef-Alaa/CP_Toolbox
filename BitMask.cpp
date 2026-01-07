@@ -18,12 +18,12 @@ using namespace std;
 #define findLowest(n) (n == 0 ? -1 : __builtin_ctzll(n))// Should be greater than zero
 #define findHighest(n) (n == 0 ? -1 : 63 - __builtin_clzll(n)) // Should be greater than zero
 #define checkParity(n) __builtin_parityll(n) // odd_parity ? 1 : 0
-#define countBuiltIn(n)  __builtin_popcountll(n)
+#define countBits(n)  __builtin_popcountll(n)
 #define hammingDistance(a, b) __builtin_popcountll(a ^ b) // How many bits are different
 
 int countInRange(ll n, int start, int end) { // End Included
     ll mask = ((1LL << (end+1)) - 1) ^ ((1LL << start) - 1);
-    return countBuiltIn(n & mask);
+    return countBits(n & mask);
 }
 
 ll xorFrom0ToN(ll n) {
@@ -34,8 +34,11 @@ ll xorFrom0ToN(ll n) {
 }
 
 /*
-    XOR Props
+    Bitwise Props
     ---------
+    -> A + B = (A|B) + (A&B)
+    -> A ^ B = (A|B) - (A&B)
+    -> A ^ B = (A|B) & ~(A&B)
     -> A ^ B = (A+B) % 2   (if A and B consists of only 1 Bit)
     -> A + B = A^B + 2*(A&B)
         Note: 2*(A&B) is the carry of the sum

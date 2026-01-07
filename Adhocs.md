@@ -16,6 +16,8 @@ cout << ans; // 10
 
 ``` cpp
 
+// Find Max/Min in Range (Fixed Range)
+
 vector<int> vec = {1, 5, 12, 7, 16, 2, 23, 40, 9, 17};
 
 int l = 0, r = 2; // window size = 3
@@ -40,10 +42,10 @@ while (r < size) {
 	
 	if (window.front() < l) window.pop_front();
 	
-	if (!window.empty()) ans[l] = vec[window.front()];
-	else ans[l] = vec[r];
-	
 	window.push_back(r);
+	
+	ans[l] = vec[window.front()];
+
 	l++;
 	r++;
 }
@@ -169,3 +171,52 @@ for (int i = 0; i < rows; i++) {**
 
 ```
 
+
+# <span style="color: #1ABC9C;font-style: italic;">Sum of Subarray Minimums</span>
+
+``` cpp
+
+/*
+Input : arr[] = [1, 2, 3, 4]   
+Output: 20  
+Explanation: Subarrays are [1], [2], [3], [4], [1, 2], [1, 2, 3], [1, 2, 3, 4], [2, 3], [2, 3, 4], [3, 4].  
+Minimums are [1, 2, 3, 4, 1, 1, 1, 2, 2, 3].
+Sum is 20.
+*/
+
+int sumSubMins(vector<int>& arr) {
+    int n = arr.size();
+    
+    vector<int> left(n), right(n);
+    stack<int> st;
+
+    // distance to previous smaller element
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && arr[st.top()] > arr[i]) {
+            st.pop();
+        }
+        left[i] = st.empty() ? (i + 1) : (i - st.top());
+        st.push(i);
+    }
+
+    while (!st.empty()) st.pop();
+
+    // distance to next smaller or equal element
+    for (int i = n - 1; i >= 0; i--) {
+        while (!st.empty() && arr[st.top()] >= arr[i]) {
+            st.pop();
+        }
+        right[i] = st.empty() ? (n - i) : (st.top() - i);
+        st.push(i);
+    }
+
+    int result = 0;
+    for (int i = 0; i < n; i++) {
+        
+        // Contribution of current element
+        result += arr[i] * left[i] * right[i];
+    }
+
+    return result;
+}
+```
