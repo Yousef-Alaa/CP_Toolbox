@@ -12,46 +12,6 @@ for (int i = 0;i < n;i++) {
 cout << ans; // 10
 ```
 
-# <span style="color: #1ABC9C;font-style: italic;">Deque-based Sliding Window</span>
-
-``` cpp
-
-// Find Max/Min in Range (Fixed Range)
-
-vector<int> vec = {1, 5, 12, 7, 16, 2, 23, 40, 9, 17};
-
-int l = 0, r = 2; // window size = 3
-vector<int> ans(vec.size() - 2, -1);
-deque<int> window;
-
-// Initiat The Window
-for (int i = l;i <= r;i++) {
-	while (!window.empty() && vec[window.back()] < vec[i]) window.pop_back();
-	window.push_back(i);
-}
-
-l++;
-r++;
-ans[0] = vec[window.front()];
-
-int size = vec.size();
-
-while (r < size) {
-
-	while (!window.empty() && vec[window.back()] < vec[r]) window.pop_back();
-	
-	if (window.front() < l) window.pop_front();
-	
-	window.push_back(r);
-	
-	ans[l] = vec[window.front()];
-
-	l++;
-	r++;
-}
-```
-
-
 # <span style="color: #1ABC9C;font-style: italic;">2D Prefix Sum </span>
 
 ``` cpp
