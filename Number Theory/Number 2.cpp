@@ -6,23 +6,13 @@ using namespace std;
 #define ull unsigned long long
 
 int MOD = 1e9 + 7;
+const int N = 1e7;
 
 /*
     Binary exponentiation
-    calc a^b
-    Takes O(log b) instead of O(b)
+    calc x^y
+    Takes O(log y) instead of O(y)
 */
-ll power(ll a, ll b) {
-    ll result = 1;
-    while (b) {
-        if (b & 1) result *= a;
-        a *= a;
-        b /= 2;
-    }
-    return result;
-}
-
-// Similar to power() but return the answer % MOD
 ll powMod(ll x, ll y, ll mod = MOD) {
     ll res = 1;
     x %= mod;
@@ -106,15 +96,15 @@ int phi(int n) {
 }
 
 // Compute from φ(1) to φ(n) in O(n*loglog(n))
-void compute_phi(int n) {
+void compute_phi() {
     
-    vector<int> phi(n + 1);
+    vector<int> phi(N + 1);
 
-    for (int i = 0; i <= n; i++) phi[i] = i;
+    for (int i = 0; i <= N; i++) phi[i] = i;
 
-    for (int i = 2; i <= n; i++) {
+    for (int i = 2; i <= N; i++) {
         if (phi[i] == i) {
-            for (int j = i; j <= n; j += i) phi[j] -= phi[j] / i;
+            for (int j = i; j <= N; j += i) phi[j] -= phi[j] / i;
         }
     }
 }
@@ -159,18 +149,17 @@ int mobius_sh(int n) {
 }
 
 // Compute from μ(1) to μ(n) in O(n*loglog(n))
-const int MAX = 1e6;
-vector<int> mob(MAX+1, -1);
+vector<int> mob(N+1, -1);
 void compute_mobius() {
 
-    vector<bool> prime(MAX+1, true);
+    vector<bool> prime(N+1, true);
 
     mob[1] = 1;
 
-    for (ll i = 2; i <= MAX; i++) {
+    for (ll i = 2; i <= N; i++) {
         if (prime[i]) {
             mob[i] = 1;
-            for (ll j = 2 * i; j <= MAX; j += i) {
+            for (ll j = 2 * i; j <= N; j += i) {
                 prime[j] = false;
                 if (j % (i * i) == 0) mob[j] = 0;
                 else mob[j] = -mob[j];

@@ -76,33 +76,23 @@ bool isPrime(int n) {
     return true;
 }
 
-// Find Primes from 1 to n
-// Max N is 10^7 – 10^8
+// Find Primes from 1 to N
 // Time: O( n*loglog(N) )
-// 1e8 -> 1s
-// 1e7 -> 77ms
-// 1e6 -> 31ms
 void sieve() {
     
-    /*
-    Note: You can use Bitset instead of vector<bool> (More Faster)
-    
-    bitset<N> isPrime;
-    isPrime.set(); // And continue
-    
-    */
-    vector<int> primes;
+
     vector<bool> isPrime(N + 1, true);
     
     isPrime[0] = isPrime[1] = false;
-
+    
     for (int i = 2;i*i <= N;i++) {
         if (isPrime[i]) {
             for (ll j = 1LL*i*i;j <= N;j+=i) isPrime[j] = false;
-        }
+            }
     }
     
     // if you need array of primes
+    vector<int> primes;
     for (int i = 2;i <= N;i++) {
         if (isPrime[i]) primes.push_back(i);
     }
@@ -110,7 +100,6 @@ void sieve() {
 }
 
 
-// Max N is 10^7 – 10^8
 // Time: O(N) because number not marked multiple times
 vector<int> linearSieve() {
 
@@ -272,7 +261,7 @@ pair<vector<bool>, vector<ll>> segmentedSieve(ll Low, ll High) {
 
 
 // Prime Factors for a single Number O(sqrt(N))
-void primeFactors(int n) {
+vector<pair<int, int>> primeFactors(int n) {
 
     vector<pair<int, int>> factors;
     
@@ -290,37 +279,35 @@ void primeFactors(int n) {
 
     // Print
     for (auto &e : factors ) cout << e.first << '^' << e.second << '\n';
+
+    return factors;
 }
 
 
 // Max N is 10^7
 // Time: O( N*loglog(N) )
 // Smallest Prime Factor for numbers from 1 to n
-vector<int> SPF(int n) {
-    
-    vector<int> spf(n+1, 0);
+vector<int> spf(N+1, 0);
+void SPF() {
 
     spf[1] = 1;
 
-    for (int i = 2;i <= n;i++) {
+    for (int i = 2;i <= N;i++) {
         if (spf[i] == 0) {
             spf[i] = i;
-            for (ll k = 1LL*i*i;k <= n;k+=i) {
+            for (ll k = 1LL*i*i;k <= N;k+=i) {
                 if (spf[k] == 0) spf[k] = i;
             }
         }
     }
 
-
-    return spf;
 }
 
 
 // Prime Factors for a single Number
 // Time: O(logN)
-void primeFactorsSPF(int n) {
+vector<pair<int, int>> primeFactorsSPF(int n) {
 
-    vector<int> spf = SPF(n);
     vector<pair<int, int>> factors;
     
     int prime;
@@ -343,8 +330,9 @@ void primeFactorsSPF(int n) {
     // Print
     for (auto &e : factors ) cout << e.first << '^' << e.second << '\n';
 
-}
+    return factors;
 
+}
 
 // Find Divisors for single number O(sqrt(N))
 vector<int> findDivisors(int n, bool srt = false) {
@@ -366,8 +354,6 @@ vector<int> findDivisors(int n, bool srt = false) {
 
 // Count Divisors for single number O(logN)
 ll countDivisors(int n) {
-
-    vector<int> spf = SPF(n);
     
     ll ans = 1;
     int prime, count;
