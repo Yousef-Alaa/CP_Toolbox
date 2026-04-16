@@ -31,6 +31,30 @@ void bfs(int start) {
     }
 }
 
+ll bfs_shortest_path(int i, int j) {
+
+    vll cost(N + 1, 1e18);
+    queue<pair<int, int>> q;
+    vis[i] = 1;
+    q.push({i, 0});
+
+    while (!q.empty()) {
+
+        auto [nx, c] = q.front();
+        q.pop();
+
+        for (auto it : adj[nx]) {
+            if (!vis[it]) {
+                vis[it] = 1;
+                q.push({it, c + 1});
+                cost[it] = c + 1;
+            }
+        }
+    }
+
+    return cost[j];
+}
+
 void dfs(int node) {
 
     vis[node] = true;
@@ -38,7 +62,7 @@ void dfs(int node) {
 
     for(auto it : adj[node]) {
         if(!vis[it]) {
-            dfs(adj, vis, it);
+            dfs(it);
         }
     }
 }
@@ -51,10 +75,7 @@ bool dfsCycle(int node, int parent) {
     for (auto it : adj[node]) {
         
         if (!vis[it]) {
-
-            if (dfsCycle(it, node, adj, vis)) {
-                return true;
-            }
+            if (dfsCycle(it, node)) return true;
         }
         else if (it != parent) {
             return true;
@@ -72,7 +93,7 @@ bool topoSort(int node) {
     vis[node] = rec_stack[node] = 1;
     bool cycle = 0;
     for (auto it : adj[node]) {
-        if (!vis[it]) cycle |= dfs(adj, vis, it);
+        if (!vis[it]) cycle |= topoSort(it);
         else if(rec_stack[it]) return true;
     }
 
@@ -117,7 +138,7 @@ void topoSortLex() {
 }
 
 
-void dijkstra() {
+void dijkstra(int start) {
 
 
     vint parent(N + 1, -1);
@@ -125,8 +146,8 @@ void dijkstra() {
     priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<>> pq; // cost, node
 
 
-    pq.push({0, 1});
-    cost[1] = 0;
+    pq.push({0, start});
+    cost[start] = 0;
 
     while (!pq.empty()) {
         
@@ -145,6 +166,27 @@ void dijkstra() {
 
     }
 
+}
+
+int kruskal(int n, vector<tuple<int, int, int>> &edges) {
+    
+    DSU ds(n);
+    ll total = 0;
+    int used = 0;
+    vector<tuple<int, int, int>> mst;
+    
+    sort(all(edges));
+    
+    for (auto [w, u, v] : edges) {
+        if (ds.find_root(u) != ds.find_root(v)) {
+            total += w;
+            ds.unite(u, v);
+            mst.push_back({w, u, v});
+            if (++used == n - 1) break;
+        }
+    }
+
+    return total;
 }
 
 
