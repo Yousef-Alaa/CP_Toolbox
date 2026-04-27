@@ -84,7 +84,6 @@ bool dfsCycle(int node, int parent) {
     return false;
 }
 
-
 stack<int> topo_sort;
 vector<bool> rec_stack(N);
 // Return true if detect a cycle (Directed)
@@ -102,7 +101,6 @@ bool topoSort(int node) {
     return cycle;
 
 }
-
 
 // Topo Sort lexicographically smallest one
 void topoSortLex() {
@@ -137,7 +135,6 @@ void topoSortLex() {
 
 }
 
-
 void dijkstra(int start) {
 
 
@@ -168,7 +165,85 @@ void dijkstra(int start) {
 
 }
 
-int kruskal(int n, vector<tuple<int, int, int>> &edges) {
+bool BellmanFord(int V, int E, int src) {
+    
+    vector<vint> edges(E, vint(3));// u, v, w
+
+    vll cost(V, 1e18);
+    cost[src] = 0;
+
+    for (int i = 1;i <= V - 1;i++) {
+        bool flag = true;
+        for (int j = 0;j < E;j++) {
+            
+            int u = edges[j][0];
+            int v = edges[j][1];
+            int w = edges[j][2];
+
+            if (cost[u] != 1e18 && w + cost[u] < cost[v]) {
+                flag = false;
+                cost[v] = w + cost[u];
+            }
+        }
+
+        if (flag) break;
+    }
+    
+    for (int j = 0;j < E;j++) {
+        auto [u, v, w] = edges[i];
+        if (cost[u] != 1e18 && w + cost[u] < cost[v]) {
+            cout << "Negative Cycle Detected";
+            return true;
+        }
+    }
+
+    return false;
+
+}
+
+// Floyd:
+// all to all shortest path in O(n^3) with memory of O(n^2)
+// input is dist[i][j] for all i,j in (1:n) as weight between node i and node j
+// initialize the matrix first with INF and zeros in the diagonal where (i == j)
+// output :
+// same matrix dist[i][j] will be shortest path between i, j
+int n;
+const int M = 500 + 5;
+const int INF = 1e9;
+int dist[M][M];
+void floyd() {
+    for (int k = 1; k <= n; k++) {
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (dist[i][k] != INF && dist[k][j] != INF) {
+                    dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+                }
+            }
+        }
+    }
+}
+
+void solveFloyd() {
+    cin >> n;
+    int m, x;
+    cin >> m >> x;
+    for (int i = 0; i <= n; i++) {
+        for (int j = 0; j <= n; j++) {
+            if (i == j) dist[i][i] = 0;
+            else dist[i][j] = INF;
+        }
+    }
+    for (int i = 0; i < m; i++) {
+        int a, b;
+        cin >> a >> b;
+        dist[a][b] = 1;
+        dist[b][a] = 1;
+    }
+    floyd();
+}
+
+// MST
+ll kruskal(int n, vector<tuple<int, int, int>> &edges) {
     
     DSU ds(n);
     ll total = 0;
@@ -189,35 +264,103 @@ int kruskal(int n, vector<tuple<int, int, int>> &edges) {
     return total;
 }
 
+ll primMST() {
+    
+    vector<bool> in_mst(N + 1);
+    vector<vector<pair<int, int>>> adj; // u, w
+    
+    ll total = 0;
+    int used = 0;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq; // w, u
+    
+    pq.emplace(0, 1);
+    
+    while (!pq.empty() && used < N) {
+        
+        auto [w, u] = pq.top();
+        pq.pop();
 
-int main() {
-
-    #ifndef ONLINE_JUDGE
-        freopen("input.txt", "r", stdin);
-        freopen("output.txt", "w", stdout);
-    #endif
-
-    int n, m, x, y;
-    cin >> n >> m;
-
-    adj.resize(n + 1);
-    vis.resize(n + 1);
-
-    while (m--) {
-        cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x);
+        if (in_mst[u]) continue;
+        
+        used++;
+        total += w;
+        in_mst[u] = true;
+        
+        for (auto [v, wt] : adj[u]) {
+            if (!in_mst[v]) pq.emplace(wt, v);
+            
+        }
     }
+    return total;
+}
 
-    cout << "Hello Graph\n";
-    dfs(adj, vis, 0);
-    cout << "\n";
-    bfs(adj, 0);
-    cout << "\n";
+int reroot_tree() {
+    
+    
+    int node1 = 0;
+    int node2 = 0;
+    int maxDepth = 0;
+    queue<pair<int, int>> q;
 
-    for (int i = 0;i < n;i++) vis[i] = false;
-    cout << (dfsCycle(0, -1, adj, vis) ? "Cycle\n" : "No Cycle\n");
+
+    q.push({1, 0}); // Pick random node
+    while (!q.empty()) {
+        
+        auto [f, cost] = q.front();
+        
+        q.pop();
+        vis[f] = 1;
+
+        if (cost > maxDepth) {
+            maxDepth = cost;
+            node1 = f;
+        }
+        
+
+        for (auto it : adj[f]) {
+            if (!vis[it]) q.push({it, cost + 1});
+        }
+
+    }
+    
+    maxDepth = 0;
+    vis = vector<bool>(N + 1);
+
+    q.push({node1, 0});
+    vint parent(N + 1, -1);
+
+    while (!q.empty()) {
+        
+        auto [f, cost] = q.front();
+        q.pop();
+        vis[f] = 1;
+
+        if (cost > maxDepth) {
+            maxDepth = cost;
+            node2 = f;
+        }
+        
+
+        for (auto it : adj[f]) {
+            if (!vis[it]) {
+                parent[it] = f;
+                q.push({it, cost + 1});
+            }
+        }
+
+    }
+    
 
 
+    vint path;
+    int x = node2;
+
+    while (parent[x] != -1) {
+        path.push_back(x);
+        x = parent[x]; 
+    }
+    path.push_back(x);
+
+    return path[ path.size() / 2 ];
 
 }
