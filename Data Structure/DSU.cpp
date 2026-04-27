@@ -8,6 +8,33 @@ private:
     int maxSize; // max elements connected together
     vector<int> rank, parent, size;
 
+public:
+    DSU(int n) {
+        sets = n;
+        parent.resize(n + 1);
+        rank.resize(n + 1, 0);
+        size.resize(n + 1, 1);
+        for (int i = 0; i <= n; i++) parent[i] = i;
+    }
+
+    int find_root(int node) {
+        if (node == parent[node]) return node;
+        return parent[node] = find_root(parent[node]);
+    }
+
+    bool same(int u, int v) {
+        return find_root(u) == find_root(v);
+    }
+    
+    int getSize(int u) {
+        return size[find_root(u)];
+    }
+
+    int unite(int u, int v) {
+        return unionByRank(u, v);
+    }
+
+private:
     int unionByRank(int u, int v) {
         
         int root_u = find_root(u);
@@ -42,32 +69,6 @@ private:
         sets--;
         maxSize = max({maxSize, size[root_u], size[root_u]});
         return sets;
-    }
-
-public:
-    DSU(int n) {
-        sets = n;
-        parent.resize(n + 1);
-        rank.resize(n + 1, 0);
-        size.resize(n + 1, 1);
-        for (int i = 0; i <= n; i++) parent[i] = i;
-    }
-
-    int find_root(int node) {
-        if (node == parent[node]) return node;
-        return parent[node] = find_root(parent[node]);
-    }
-
-    bool same(int u, int v) {
-        return find_root(u) == find_root(v);
-    }
-    
-    int getSize(int u) {
-        return size[find_root(u)];
-    }
-
-    int unite(int u, int v) {
-        return unionByRank(u, v);
     }
 
 };

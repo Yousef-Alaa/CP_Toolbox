@@ -9,46 +9,6 @@ private:
     vector<int> parent, rank, size;
     stack<tuple<int, int, int>> history;
 
-    int unite_by_rank(int u, int v) {
-        int root_u = find_root(u);
-        int root_v = find_root(v);
-        if (root_u == root_v) return sets;
-        
-        sets--;
-        if (rank[root_u] < rank[root_v]) {
-            history.push({0, root_u, parent[root_u]});
-            parent[root_u] = root_v;
-        } else {
-            history.push({0, root_v, parent[root_v]});
-            parent[root_v] = root_u;
-            if (rank[root_u] == rank[root_v]) {
-                history.push({1, root_u, rank[root_u]});
-                rank[root_u]++;
-            }
-        }
-        return sets;
-    }
-
-    int unite_by_size(int u, int v) {
-        int root_u = find_root(u);
-        int root_v = find_root(v);
-        if (root_u == root_v) return sets;
-        
-        sets--;
-        if (size[root_u] < size[root_v]) {
-            history.push({0, root_u, parent[root_u]});
-            history.push({2, root_v, size[root_v]});
-            parent[root_u] = root_v;
-            size[root_v] += size[root_u];
-        } else {
-            history.push({0, root_v, parent[root_v]});
-            history.push({2, root_u, size[root_u]});
-            parent[root_v] = root_u;
-            size[root_u] += size[root_v];
-        }
-        return sets;
-    }
-
 public:
     DSU_Roll(int n) {
         sets = n;
@@ -98,6 +58,47 @@ public:
             else if (op_type == 1) rank[node] = old_value;
             else if (op_type == 2) size[node] = old_value;
         
+        }
+        return sets;
+    }
+
+private:
+    int unite_by_rank(int u, int v) {
+        int root_u = find_root(u);
+        int root_v = find_root(v);
+        if (root_u == root_v) return sets;
+        
+        sets--;
+        if (rank[root_u] < rank[root_v]) {
+            history.push({0, root_u, parent[root_u]});
+            parent[root_u] = root_v;
+        } else {
+            history.push({0, root_v, parent[root_v]});
+            parent[root_v] = root_u;
+            if (rank[root_u] == rank[root_v]) {
+                history.push({1, root_u, rank[root_u]});
+                rank[root_u]++;
+            }
+        }
+        return sets;
+    }
+
+    int unite_by_size(int u, int v) {
+        int root_u = find_root(u);
+        int root_v = find_root(v);
+        if (root_u == root_v) return sets;
+        
+        sets--;
+        if (size[root_u] < size[root_v]) {
+            history.push({0, root_u, parent[root_u]});
+            history.push({2, root_v, size[root_v]});
+            parent[root_u] = root_v;
+            size[root_v] += size[root_u];
+        } else {
+            history.push({0, root_v, parent[root_v]});
+            history.push({2, root_u, size[root_u]});
+            parent[root_v] = root_u;
+            size[root_u] += size[root_v];
         }
         return sets;
     }
