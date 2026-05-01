@@ -102,15 +102,23 @@ bool topoSort(int node) {
 
 }
 
+// Kahn’s Algorithm
 // Topo Sort lexicographically smallest one
 void topoSortLex() {
 
 
-    vector<int> indeg(N+1, 0);
+    vector<int> indegree(N+1, 0);
     priority_queue<int, vector<int>, greater<int>> pq;
 
+    int u, v, m;
+    for (int i = 0; i < m; i++) {
+        cin >> u >> v;
+        adj[u].push_back(v);
+        indegree[v]++;
+    }
+
     for(int i = 1; i <= N; i++) {
-        if(indeg[i] == 0) pq.push(i);
+        if(indegree[i] == 0) pq.push(i);
     }
 
     vector<int> ans;
@@ -121,8 +129,8 @@ void topoSortLex() {
         ans.push_back(u);
 
         for(int it : adj[u]) {
-            indeg[it]--;
-            if(indeg[it] == 0) pq.push(it);
+            indegree[it]--;
+            if(indegree[it] == 0) pq.push(it);
         }
     }
 
