@@ -67,7 +67,7 @@ private:
         }
         
         sets--;
-        maxSize = max({maxSize, size[root_u], size[root_u]});
+        maxSize = max({maxSize, size[root_u], size[root_v]});
         return sets;
     }
 
