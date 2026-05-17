@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define ll long long
+
 /*
 | Function Type | Identity         |
 | ------------- | ---------------- |
@@ -15,14 +17,98 @@ using namespace std;
 | a ^ b         | 0                |
 */
 
+// Recursive
 class SegmentTree {
+    #define Left (node*2+1)
+    #define Right (node*2+2)
+    #define mid (l+r>>1)
+    
+    private:
+    
+    int n, sz;
+    const int iden = 1e9;
+    vector<ll> tree, arr;
+
+    ll merge(ll a, ll b) {
+        return min(a, b);
+    }
+
+    void build(int l, int r, int node) {
+
+        if (l == r) {
+            tree[node] = arr[l];
+            return;
+        }
+
+        build(l, mid, Left);
+        build(mid + 1, r, Right);
+        tree[node] = merge(tree[Left], tree[Right]);
+        
+    }
+    
+    void update(int l, int r, int node, int idx, int val) {
+        
+        if (l == r) {
+            tree[node] = val;
+            return;
+        }
+
+        if (idx <= mid) update(l, mid, Left, idx, val);
+        else update(mid + 1, r, Right, idx, val);
+
+        tree[node] = merge(tree[Left], tree[Right]);
+    }
+
+    ll query(int l, int r, int node, int lq, int rq) {
+
+        if (l >= lq && r <= rq) return tree[node];
+
+        ll p1 = iden;
+        ll p2 = iden;
+
+        if (lq <= mid) p1 = query(l, mid, Left, lq, rq);
+        if (rq > mid) p2 = query(mid + 1, r, Right, lq, rq);
+
+        return merge(p1, p2);
+    }
+    
+    public:
+
+    SegmentTree(const vector<ll> &v) {
+
+        sz = 1;
+        arr = v;
+        n = arr.size();
+
+        while (sz < n) sz *= 2;
+        tree.resize(2*sz, iden);
+
+        build(0, n - 1, 0);
+    }
+
+    void update(int idx, ll val) {
+        update(0, n - 1, 0, idx, val);
+    }
+    
+    ll query(int l, int r) {
+        return query(0, n - 1, 0, l, r);
+    }
+    
+    
+    #undef Left
+    #undef Right
+    #undef mid
+};
+
+// Iterative
+class SegmentTreei {
 private:
     int n;
     int size;
     vector<int> tree;
     const int identity = INT_MAX;
 
-    inline int combine(int a, int b) {
+    int merge(int a, int b) {
         return min(a, b);
     }
 
@@ -33,7 +119,7 @@ private:
     }
 
 public:
-    SegmentTree(const vector<int>& arr) {
+    SegmentTreei(const vector<int>& arr) {
 
         n = arr.size();
         size = next_pow2(n);
@@ -41,7 +127,7 @@ public:
 
         for (int i = 0;i < n;i++) tree[size + i] = arr[i];
         for (int i = size - 1; i >= 1; i--) {
-            tree[i] = combine(tree[2 * i], tree[2 * i + 1]);
+            tree[i] = merge(tree[2 * i], tree[2 * i + 1]);
         }
 
     }
@@ -53,7 +139,7 @@ public:
         tree[idx] = value;
         idx >>= 1;
         while (idx >= 1) {
-            tree[idx] = combine(tree[2 * idx], tree[2 * idx + 1]);
+            tree[idx] = merge(tree[2 * idx], tree[2 * idx + 1]);
             idx >>= 1;
         }
     }
@@ -69,15 +155,15 @@ public:
 
         while (l <= r) {
             if (l & 1) {
-                resL = combine(resL, tree[l++]);
+                resL = merge(resL, tree[l++]);
             }
             if (!(r & 1)) {
-                resR = combine(tree[r--], resR);
+                resR = merge(tree[r--], resR);
             }
             l >>= 1;
             r >>= 1;
         }
-        return combine(resL, resR);
+        return merge(resL, resR);
     }
 };
 
