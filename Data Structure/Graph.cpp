@@ -198,7 +198,9 @@ bool BellmanFord(int V, int E, int src) {
     }
     
     for (int j = 0;j < E;j++) {
-        auto [u, v, w] = edges[j];
+        int u = edges[j][0];
+        int v = edges[j][1];
+        int w = edges[j][2];
         if (cost[u] != 1e18 && w + cost[u] < cost[v]) {
             cout << "Negative Cycle Detected";
             return true;
