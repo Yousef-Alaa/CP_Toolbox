@@ -21,12 +21,11 @@ public:
         n = arr.size();
         maxLog = __lg(n) + 1;
         
-        Log.resize(n);
+        Log.resize(n + 1);
         st.assign(n, vector<int>(maxLog, iden));
 
         Log[1] = 0;
-        // log(n) = log(n / 2) + 1
-        for (int i = 2; i < n; i++) Log[i] = Log[i / 2] + 1;
+        for (int i = 2; i <= n; i++) Log[i] = Log[i / 2] + 1;
 
         for (int i = 0; i < n; i++) st[i][0] = arr[i];
 
