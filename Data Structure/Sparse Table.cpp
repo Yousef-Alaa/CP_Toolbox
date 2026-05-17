@@ -2,22 +2,31 @@
 
 using namespace std;
 
-// Supports min, max, gcd, OR, AND
+// Supports min, max, gcd, lcm, OR, AND
 class SparseTable {
 private:
     int n;
     int maxLog;
+    const int iden = INT_MAX;
+    vector<int> Log;
     vector<vector<int>> st; // [position][size] Note: size stored as 2^i
 
-    #define fn(x, y) min(x, y)
-    #define findHigh(n) (63 - __builtin_clzll(n)) 
+    int merge(int a, int b) {
+        return min(a, b);
+    }
 
 public:
     SparseTable(const vector<int>& arr) {
 
         n = arr.size();
-        maxLog = findHigh(n) + 1;
-        st.assign(n, vector<int>(maxLog));
+        maxLog = __lg(n) + 1;
+        
+        Log.resize(n);
+        st.assign(n, vector<int>(maxLog, iden));
+
+        Log[1] = 0;
+        // log(n) = log(n / 2) + 1
+        for (int i = 2; i < n; i++) Log[i] = Log[i / 2] + 1;
 
         for (int i = 0; i < n; i++) st[i][0] = arr[i];
 
@@ -25,17 +34,35 @@ public:
             for (int i = 0; i + (1 << j) <= n; i++) {
                 int part1 = st[i][j - 1];
                 int part2 = st[i + (1 << (j - 1))][j - 1];
-                st[i][j] = fn(part1, part2);
+                st[i][j] = merge(part1, part2);
             }
         }
     }
 
+    // O(1)
     int query(int L, int R) {
         int len = R - L + 1;
-        int j = findHigh(len);
+        int j = Log[len];
         int part1 = st[L][j];
         int part2 = st[R - (1 << j) + 1][j];
-        return fn(part1, part2);
+        return merge(part1, part2);
+    }
+    
+    // O(log n)
+    int query2(int L, int R) {
+
+        int ans = iden;
+        int len = R - L + 1;
+
+        for (int i = maxLog;i >= 0;i--) {
+            if (len & (1 << i)) {
+                ans = merge(ans, st[L][i]);
+                L += (1 << i);
+            }
+        }
+
+
+        return ans;
     }
 };
 
