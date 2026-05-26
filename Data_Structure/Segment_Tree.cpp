@@ -167,6 +167,76 @@ public:
     }
 };
 
+// Range Update, Point Query
+class SegmentTree2 {
+    #define Left (node*2+1)
+    #define Right (node*2+2)
+    #define mid (l+r>>1)
+    
+    private:
+    
+    int n, sz;
+    const ll iden = 0;
+    vector<ll> arr;
+    vector<ll> tree;
+
+    ll merge(ll a, ll b) {
+        return a + b;
+    }
+    
+    void update(int l, int r, int node, int lq, int rq, int val) {
+        
+        if (l >= lq && r <= rq) {
+            tree[node] = merge(tree[node], val);
+            return;
+        }
+        
+        if (l == r) {
+            tree[node] = merge(tree[node], val);
+            return;
+        }
+
+        if (lq <= mid) update(l, mid, Left, lq, rq, val);
+        if (rq > mid)  update(mid + 1, r, Right, lq, rq, val);
+
+    }
+
+    ll query(int l, int r, int node, ll ans, int idx) {
+
+        ll res = merge(tree[node], ans);
+
+        if (l == r) return res;
+
+        if (idx <= mid) return query(l, mid, Left, res,idx);
+        return query(mid + 1, r, Right, res, idx);
+
+    }
+    
+    public:
+
+    SegmentTree2(int nn) {
+
+        sz = 1;
+        n = nn;
+
+        while (sz < n) sz *= 2;
+        tree.resize(2*sz, iden);
+
+    }
+
+    void update(int lq, int rq, int val) {
+        update(0, n - 1, 0, lq, rq, val);
+    }
+    
+    ll query(int idx) {
+        return query(0, n - 1, 0, 0, idx);
+    }
+    
+    #undef Left
+    #undef Right
+    #undef mid
+};
+
 int main() {
 
     #ifndef ONLINE_JUDGE
