@@ -25,7 +25,7 @@ class SegmentTree {
     
     private:
     
-    int n, sz;
+    int sz;
     const int iden = 1e9;
     vector<ll> tree, arr;
 
@@ -78,20 +78,20 @@ class SegmentTree {
 
         sz = 1;
         arr = v;
-        n = arr.size();
 
-        while (sz < n) sz *= 2;
+        while (sz < v.size()) sz *= 2;
+        arr.resize(sz);
         tree.resize(2*sz, iden);
 
-        build(0, n - 1, 0);
+        build(0, sz - 1, 0);
     }
 
     void update(int idx, ll val) {
-        update(0, n - 1, 0, idx, val);
+        update(0, sz - 1, 0, idx, val);
     }
     
     ll query(int l, int r) {
-        return query(0, n - 1, 0, l, r);
+        return query(0, sz - 1, 0, l, r);
     }
     
     
@@ -175,7 +175,7 @@ class SegmentTree2 {
     
     private:
     
-    int n, sz;
+    int sz;
     const ll iden = 0;
     vector<ll> arr;
     vector<ll> tree;
@@ -214,22 +214,20 @@ class SegmentTree2 {
     
     public:
 
-    SegmentTree2(int nn) {
+    SegmentTree2(int n) {
 
         sz = 1;
-        n = nn;
-
         while (sz < n) sz *= 2;
         tree.resize(2*sz, iden);
 
     }
 
     void update(int lq, int rq, int val) {
-        update(0, n - 1, 0, lq, rq, val);
+        update(0, sz - 1, 0, lq, rq, val);
     }
     
     ll query(int idx) {
-        return query(0, n - 1, 0, 0, idx);
+        return query(0, sz - 1, 0, 0, idx);
     }
     
     #undef Left
@@ -244,7 +242,7 @@ int main() {
         freopen("../output.txt", "w", stdout);
     #endif
 
-    vector<int> a = {1, 3, 1, 8, 5, 6, 7, 2};
+    vector<long long> a = {1, 3, 1, 8, 5, 6, 7, 2};
     SegmentTree st(a);
 
     cout << "[0..2] = " << st.query(0, 2) << '\n';
@@ -252,6 +250,16 @@ int main() {
 
     st.update(2, 10); // arr[2] = 10
     cout << "after update [0..2] = " << st.query(0, 2) << '\n';
+
+    SegmentTree2 seg(8);
+
+    seg.update(0, 5, 10);
+    seg.update(2, 6, 5);
+
+    cout << seg.query(1) << '\n';
+    cout << seg.query(3) << '\n';
+    cout << seg.query(6) << '\n';
+    cout << seg.query(7) << '\n';
 
     return 0;
 }
