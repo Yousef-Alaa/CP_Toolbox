@@ -80,7 +80,7 @@ class SegmentTree {
         arr = v;
 
         while (sz < v.size()) sz *= 2;
-        arr.resize(sz);
+        arr.resize(sz, iden);
         tree.resize(2*sz, iden);
 
         build(0, sz - 1, 0);
