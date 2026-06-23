@@ -168,7 +168,7 @@ public:
 };
 
 // Range Update, Point Query
-class SegmentTree2 {
+class SegTree {
     #define Left (node*2+1)
     #define Right (node*2+2)
     #define mid (l+r>>1)
@@ -214,7 +214,7 @@ class SegmentTree2 {
     
     public:
 
-    SegmentTree2(int n) {
+    SegTree(int n) {
 
         sz = 1;
         while (sz < n) sz *= 2;
@@ -251,7 +251,7 @@ int main() {
     st.update(2, 10); // arr[2] = 10
     cout << "after update [0..2] = " << st.query(0, 2) << '\n';
 
-    SegmentTree2 seg(8);
+    SegTree seg(8);
 
     seg.update(0, 5, 10);
     seg.update(2, 6, 5);
