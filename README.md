@@ -23,20 +23,23 @@ Files:
 - `Adhocs.cpp`
 - `Adhocs.md`
 - `STLs.cpp`
+- `BitMask.cpp`
 
 ---
 
 ## 🔍 Algorithms
 
-### Binary Search
-Common binary search patterns and utilities.
+### Graph Utilities
+- `MST.cpp`
+- `shortest_paths.cpp`
+- `topo_sort.cpp`
+- `traversals.cpp`
 
+### Binary Search
 - `BinarySearch.cpp`
 
-### Bitmasking
-Useful bit manipulation tricks and subset utilities.
-
-- `BitMask.cpp`
+### Strings
+- `Hashing.cpp`
 
 ---
 
@@ -55,11 +58,16 @@ Collection of essential data structures used in competitive programming.
 - `MonoDeque.cpp`
 
 ### Range Query Structures
-- `Segment Tree.cpp`
-- `Sparse Table.cpp`
+- `BIT.cpp`
+- `Segment_Tree.cpp`
+- `Segment_Lazy.cpp`
+- `MergeSortTree.cpp`
+- `PST.cpp` \# Persistent Segment Tree
+- `Sparse_Table.cpp`
+- `Sparse_Table_2D.cpp`
 
-### Graph Utilities
-- `Graph.cpp`
+### Strings
+- `Trie.cpp`
 
 ---
 
@@ -67,35 +75,56 @@ Collection of essential data structures used in competitive programming.
 
 Useful mathematical algorithms and combinatorics utilities.
 
-- `Combinatorics.cpp`
-- `Number 1.cpp`
-- `Number 2.cpp`
-
+- `combinatorics.cpp`
+- `primes_and_sieves.cpp`
+- `divisors_and_math.cpp`
+- `modular_arithmetic.cpp`
+- `Euler_Mobius.cpp`
 ---
 
 ## 📂 Repository Structure
 
 ```bash
 .
-├── Adhocs.cpp
-├── Adhocs.md
-├── BinarySearch.cpp
-├── BitMask.cpp
-├── Data Structure
+├── Algorithms
+│   ├── Graph
+│   │   ├── MST.cpp
+│   │   ├── shortest_paths.cpp
+│   │   ├── topo_sort.cpp
+│   │   └── traversals.cpp
+│   ├── Math
+│   │   ├── combinatorics.cpp
+│   │   ├── divisors_and_math.cpp
+│   │   ├── Euler_Mobius.cpp
+│   │   ├── modular_arithmetic.cpp
+│   │   └── primes_and_sieves.cpp
+│   ├── Searching
+│   │   └── BinarySearch.cpp
+│   └── Strings
+│       └── Hashing.cpp
+├── Data_Structures
+│   ├── assets
+│   │   └── Monotonic Stack.png
+│   ├── BIT.cpp
 │   ├── DSU.cpp
 │   ├── DSU_Parity.cpp
 │   ├── DSU_Rollback.cpp
-│   ├── Graph.cpp
+│   ├── MergeSortTree.cpp
 │   ├── MonoDeque.cpp
 │   ├── MonoQueue.cpp
 │   ├── MonoStack.cpp
-│   ├── Segment Tree.cpp
-│   ├── Sparse Table.cpp
-│   └── Sparse Table.run
-├── Monotonic Stack.png
-├── Number Theory
-│   ├── Combinatorics.cpp
-│   ├── Number 1.cpp
-│   └── Number 2.cpp
-└── STLs.cpp
+│   ├── PST.cpp
+│   ├── Segment_Lazy.cpp
+│   ├── Segment_Tree.cpp
+│   ├── Sparse_Table_2D.cpp
+│   ├── Sparse_Table.cpp
+│   └── Trie.cpp
+├── input.txt
+├── output.txt
+├── README.md
+└── Techniques
+    ├── Adhocs.cpp
+    ├── Adhocs.md
+    ├── BitMask.cpp
+    └── STLs.cpp
 ```
