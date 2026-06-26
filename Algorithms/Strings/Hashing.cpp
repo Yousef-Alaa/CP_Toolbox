@@ -39,11 +39,11 @@ void init() {
     }
 }
 
-vector<int> pref1(N, 0), pref2(N, 0);
-pair<int, int> sub_hash(int l, int r) {
-    if (l - 1 < 0) return {pref1[r], pref2[r]};
-    int h1 = (pref1[r] - 1LL * pref1[l - 1] * pow1[r - l + 1]) % mod1;
-    int h2 = (pref2[r] - 1LL * pref2[l - 1] * pow2[r - l + 1]) % mod2;
+vector<pint> pref(N, 0);
+auto sub_hash = [&](int l, int r) -> pint {
+    if (l < 1) return pref[r];
+    int h1 = (pref[r].first - 1LL * pref[l - 1].first * pow1[r - l + 1]) % mod1;
+    int h2 = (pref[r].second - 1LL * pref[l - 1].second * pow2[r - l + 1]) % mod2;
     if (h1 < 0) h1 += mod1;
     if (h2 < 0) h2 += mod2;
     return {h1, h2};
