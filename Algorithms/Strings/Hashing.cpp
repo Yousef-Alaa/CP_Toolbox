@@ -4,9 +4,15 @@ using namespace std;
 
 #define ll long long
 
+/*
+Useful Bases
+============
+31, 37, 131, 137
+*/
+
 const int N = 1e6 + 1;
-const int base1 = 31;
-const int base2 = 37;
+const int base1 = 131;
+const int base2 = 137;
 const int mod1 = 1e9 + 7;
 const int mod2 = 2e9 + 11;
 int inv1 = 0, inv2 = 0;
@@ -54,6 +60,13 @@ private:
     deque<int> dq;
     int H1 = 0, H2 = 0;
 
+    int get_char(char c) {
+        if (c == ' ') return 1;
+        if (c >= 'a' && c <= 'z') return (c - 'a') + 2;
+        if (c >= 'A' && c <= 'Z') return (c - 'A') + 28;
+        return 0; 
+    }
+
 public:
     Hash() {
         init();
@@ -67,7 +80,7 @@ public:
 
     void push_back(char c) {
         // H * base + x
-        int x = c - 'a' + 1;
+        int x = get_char(c);
         H1 = (1LL * H1 * base1 + x) % mod1;
         H2 = (1LL * H2 * base2 + x) % mod2;
         dq.push_back(x);
@@ -82,7 +95,7 @@ public:
     }
     void push_front(char c) {
         // H + x * pow(len)
-        int x = c - 'a' + 1;
+        int x = get_char(c);
         H1 = (H1 + 1LL * x * pow1[dq.size()]) % mod1;
         H2 = (H2 + 1LL * x * pow2[dq.size()]) % mod2;
         dq.push_front(x);
@@ -96,6 +109,10 @@ public:
         if (H1 < 0) H1 += mod1;
         if (H2 < 0) H2 += mod2;
         dq.pop_front();
+    }
+
+    void reset() {
+        H1 = H2 = 0;
     }
 
 };
