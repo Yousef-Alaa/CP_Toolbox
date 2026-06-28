@@ -109,6 +109,8 @@ Useful mathematical algorithms and combinatorics utilities.
 │   ├── DSU.cpp
 │   ├── DSU_Parity.cpp
 │   ├── DSU_Rollback.cpp
+│   ├── Hash_Segment.cpp
+│   ├── Hash_Segment_Lazy.cpp
 │   ├── MergeSortTree.cpp
 │   ├── MonoDeque.cpp
 │   ├── MonoQueue.cpp
