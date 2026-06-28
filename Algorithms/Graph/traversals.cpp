@@ -31,30 +31,6 @@ void bfs(int start) {
     }
 }
 
-ll bfs_shortest_path(int i, int j) {
-
-    vll cost(N + 1, 1e18);
-    queue<pair<int, int>> q;
-    vis[i] = 1;
-    q.push({i, 0});
-
-    while (!q.empty()) {
-
-        auto [nx, c] = q.front();
-        q.pop();
-
-        for (auto it : adj[nx]) {
-            if (!vis[it]) {
-                vis[it] = 1;
-                q.push({it, c + 1});
-                cost[it] = c + 1;
-            }
-        }
-    }
-
-    return cost[j];
-}
-
 void dfs(int node) {
 
     vis[node] = true;
