@@ -17,6 +17,7 @@ const int mod1 = 1e9 + 7;
 const int mod2 = 2e9 + 11;
 int inv1 = 0, inv2 = 0;
 vector<int> pow1, pow2;
+vector<int> prefPow1, prefPow2;
 
 ll powMod(ll x, ll y, ll mod) {
     ll res = 1;
@@ -38,10 +39,15 @@ void init() {
 
     pow1.resize(N + 1);
     pow2.resize(N + 1);
+    prefPow1.resize(N + 1);
+    prefPow2.resize(N + 1);
     pow1[0] = pow2[0] = 1;
+    prefPow1[0] = prefPow2[0] = 1;
     for (int i = 1;i <= N;i++) {
         pow1[i] = (1LL * pow1[i - 1] * base1) % mod1;
         pow2[i] = (1LL * pow2[i - 1] * base2) % mod2;
+        prefPow1[i] = (1LL * pow1[i] + prefPow1[i - 1]) % mod1;
+        prefPow2[i] = (1LL * pow2[i] + prefPow2[i - 1]) % mod2;
     }
 }
 
