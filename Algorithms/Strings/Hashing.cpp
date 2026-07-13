@@ -51,17 +51,43 @@ void init() {
     }
 }
 
-vector<pint> pref(N, 0);
-auto sub_hash = [&](int l, int r) -> pint {
-    if (l < 1) return pref[r];
-    int h1 = (pref[r].first - 1LL * pref[l - 1].first * pow1[r - l + 1]) % mod1;
-    int h2 = (pref[r].second - 1LL * pref[l - 1].second * pow2[r - l + 1]) % mod2;
-    if (h1 < 0) h1 += mod1;
-    if (h2 < 0) h2 += mod2;
-    return {h1, h2};
+
+struct Hash {
+    
+    vector<int> h1, h2;
+    Hash(string &s) {
+        init();
+        h1.resize(s.size());
+        h2.resize(s.size());
+        make(s);
+    }
+
+    void make(const string &s) {
+        h1[0] = s[0] - '0' + 1;
+        h2[0] = s[0] - '0' + 1;
+        
+        for (int i = 1;i<s.length();i++) {
+            int c = s[i] - '0' + 1;
+            h1[i] = (1LL * h1[i-1] * base1 + c) % mod1;
+            h2[i] = (1LL * h2[i-1] * base2 + c) % mod2;
+        }
+    }
+
+    pair<int, int> get(int l, int r) {
+        if (l == 0) return {h1[r], h2[r]};
+        
+        int v1 = (h1[r] - 1LL * h1[l - 1] * pow1[r - l + 1]) % mod1;
+        int v2 = (h2[r] - 1LL * h2[l - 1] * pow2[r - l + 1]) % mod2;
+        
+        if (v1 < 0) v1 += mod1;
+        if (v2 < 0) v2 += mod2;
+
+        return {v1, v2};
+    }
+
 };
 
-class Hash {
+class Hash_dq {
 private:
     deque<int> dq;
     int H1 = 0, H2 = 0;
@@ -74,11 +100,11 @@ private:
     }
 
 public:
-    Hash() {
+    Hash_dq() {
         init();
     }
 
-    Hash(string &s) : Hash() {
+    Hash_dq(string &s) : Hash_dq() {
         for (char &c : s) push_back(c);
     }
 
@@ -127,8 +153,8 @@ public:
 int main() {
 
     #ifndef ONLINE_JUDGE
-        // freopen("../input.txt", "r", stdin);
-        freopen("../output.txt", "w", stdout);
+        // freopen("../../input.txt", "r", stdin);
+        freopen("../../output.txt", "w", stdout);
     #endif
 
     ios_base::sync_with_stdio(false);
@@ -141,7 +167,7 @@ int main() {
     string str2 = "youseff";
     Hash s1(str1), s2(str2);
 
-    cout << (s1.get_val() == s2.get_val() ? "Same" : "Different") << '\n';
+    cout << (s1.get(0, str1.size() - 1) == s2.get(0, str2.size() - 1) ? "Same" : "Different") << '\n';
     
 
 }
