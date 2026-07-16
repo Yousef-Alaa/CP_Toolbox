@@ -101,15 +101,19 @@ Useful mathematical algorithms and combinatorics utilities.
 │   │   └── primes_and_sieves.cpp
 │   ├── Searching
 │   │   └── BinarySearch.cpp
-│   └── Strings
-│       └── Hashing.cpp
+│   ├── Strings
+│   │   └── Hashing.cpp
+│   └── MO_Algorithm.cpp
 ├── Data_Structures
 │   ├── assets
+│   │   ├── BIT_Img1.jpg
+│   │   ├── BIT_Img2.png
 │   │   └── Monotonic Stack.png
 │   ├── BIT.cpp
 │   ├── DSU.cpp
 │   ├── DSU_Parity.cpp
 │   ├── DSU_Rollback.cpp
+│   ├── Dynamic_Segment.cpp
 │   ├── Hash_Segment.cpp
 │   ├── Hash_Segment_Lazy.cpp
 │   ├── MergeSortTree.cpp

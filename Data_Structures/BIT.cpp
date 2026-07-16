@@ -59,7 +59,9 @@ struct BIT {
             }
         }
         
-        return (idx < n) ? idx : -1;
+        // (idx + 1) - 1
+        // +1 for to get greater or equal, -1 to convert it to 0-based index
+        return idx;
     }
 };
 
