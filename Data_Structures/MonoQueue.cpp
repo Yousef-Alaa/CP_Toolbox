@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include "MonoStack.cpp"
 using namespace std;
 
 //* Deque Implementation
@@ -26,8 +27,8 @@ public:
         q.pop();
     }
 
-    T top() {
-        return q.top();
+    T front() {
+        return q.front();
     }
 
     bool empty() {
@@ -68,7 +69,7 @@ public:
         out.pop();
     }
 
-    T top() {
+    T front() {
         if (out.empty()) moveInToOut();
         return out.top();
     }

@@ -53,7 +53,7 @@ class SegmentLazy {
         
     }
     
-    void update(int l, int r, int node, int lq, int rq, int val) {
+    void update(int l, int r, int node, int lq, int rq, ll val) {
 
         propegate(l, r, node);
         
@@ -131,9 +131,9 @@ class SegmentLazy {
 
 int main() {
 
-    #ifdef YOUSEF
-        freopen("input.txt", "r", stdin);
-        freopen("output.txt", "w", stdout);
+    #ifndef ONLINE_JUDGE
+        // freopen("../input.txt", "r", stdin);
+        freopen("../output.txt", "w", stdout);
     #endif
     
 

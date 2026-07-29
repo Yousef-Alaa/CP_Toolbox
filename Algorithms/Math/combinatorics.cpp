@@ -137,8 +137,8 @@ ll nPr(ll n, ll r, ll mod = MOD) {
 int main() {
 
     #ifndef ONLINE_JUDGE
-        freopen("../input.txt", "r", stdin);
-        freopen("../output.txt", "w", stdout);
+        // freopen("../../input.txt", "r", stdin);
+        freopen("../../output.txt", "w", stdout);
     #endif
 
     srand(time(0));

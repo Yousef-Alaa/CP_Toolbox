@@ -76,72 +76,62 @@ bool cycle_dir(int node) {
 
 }
 
-int reroot_tree() {
+bool isBipartite(){
     
-    int node1 = 0;
-    int node2 = 0;
-    int maxDepth = 0;
     queue<pair<int, int>> q;
-
-
-    q.push({1, 0}); // Pick random node
-    while (!q.empty()) {
-        
-        auto [f, cost] = q.front();
-        
-        q.pop();
-        vis[f] = 1;
-
-        if (cost > maxDepth) {
-            maxDepth = cost;
-            node1 = f;
-        }
-        
-
-        for (auto it : adj[f]) {
-            if (!vis[it]) q.push({it, cost + 1});
-        }
-
-    }
+    vector<int> col(N + 1, -1);
     
-    maxDepth = 0;
-    vis = vector<bool>(N + 1);
-
-    q.push({node1, 0});
-    vint parent(N + 1, -1);
-
-    while (!q.empty()) {
-        
-        auto [f, cost] = q.front();
-        q.pop();
-        vis[f] = 1;
-
-        if (cost > maxDepth) {
-            maxDepth = cost;
-            node2 = f;
-        }
-        
-
-        for (auto it : adj[f]) {
-            if (!vis[it]) {
-                parent[it] = f;
-                q.push({it, cost + 1});
+    for (int i = 1; i <= N; i++) {
+        if (col[i] == -1) {
+            q.push({i, 0});
+            col[i] = 0;
+            while (!q.empty()) {
+                auto [v, c] = q.front();
+                q.pop();
+                for (int j : adj[v]) {
+                    if (col[j] == c) return false;
+                    if (col[j] == -1) {
+                        col[j] = 1 - c;
+                        q.push({j, col[j]});
+                    }
+                }
             }
         }
-
     }
-    
 
+    return true;
+}
+
+// Find Tree Center (node that minimizes max distance to all nodes)
+int get_tree_center(int src = 1) {
+    
+    auto bfs_far = [&](int start, vint& parent) {
+        vint dist(N + 1, -1);
+        queue<int> q;
+        q.push(start);
+        dist[start] = 0;
+        int farthest = start;
+        
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+            if (dist[u] > dist[farthest]) farthest = u;
+            for (int v : adj[u]) {
+                if (dist[v] == -1) {
+                    dist[v] = dist[u] + 1;
+                    parent[v] = u;
+                    q.push(v);
+                }
+            }
+        }
+        return farthest;
+    };
+
+    vint p1(N + 1, -1), p2(N + 1, -1);
+    int u = bfs_far(src, p1);  // 1st BFS: find diameter endpoint 1
+    int v = bfs_far(u, p2);    // 2nd BFS: find diameter endpoint 2 & path
 
     vint path;
-    int x = node2;
-
-    while (parent[x] != -1) {
-        path.push_back(x);
-        x = parent[x]; 
-    }
-    path.push_back(x);
-
-    return path[ path.size() / 2 ];
-
+    for (int curr = v; curr != -1; curr = p2[curr]) path.push_back(curr);
+    return path[path.size() / 2]; // Return center node
 }

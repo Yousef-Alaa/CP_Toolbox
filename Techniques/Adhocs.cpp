@@ -6,6 +6,25 @@ using namespace std;
 #define ll long long
 #define bigInt __int128
 #define ull unsigned long long
+#define f(first, end) for (int i = first; i < end; i++)
+
+typedef vector<int> vint;
+typedef pair<int, int> pint;
+
+
+// Coordinate Compression
+void compress(vint &a, int start) {
+    int n = a.size();
+    vector<pint> pairs(n);
+
+    f(0, n) pairs[i] = {a[i], i};
+    sort(all(pairs));
+    int curr = start;
+    f(0, n) {
+        if (i > 0 && pairs[i - 1].first != pairs[i].first) curr++;
+        a[pairs[i].second] = curr;
+    }
+}
 
 
 // Next Element Greater/Smaller Than 
@@ -55,6 +74,7 @@ ll BasetoDecimal(string in, ll base) {
 string DecimaltoBase(ll number, ll base) { 
     if (number == 0) 
         return "0"; 
+    string letters = "0123456789ABCDEF";
     string res = ""; 
     for (; number; number /= base) 
         res = letters[number % base] + res; 
@@ -65,8 +85,8 @@ string DecimaltoBase(ll number, ll base) {
 int main() {
 
     #ifndef ONLINE_JUDGE
-        // freopen("input.txt", "r", stdin);
-        freopen("output.txt", "w", stdout);
+        // freopen("../input.txt", "r", stdin);
+        freopen("../output.txt", "w", stdout);
     #endif
 
     vector<int> vec = {1, 5, 12, 7, 16, 2, 23, 40, 9, 17};

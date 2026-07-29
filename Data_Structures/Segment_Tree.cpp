@@ -46,7 +46,7 @@ class SegmentTree {
         
     }
     
-    void update(int l, int r, int node, int idx, int val) {
+    void update(int l, int r, int node, int idx, ll val) {
         
         if (l == r) {
             tree[node] = val;
@@ -238,7 +238,7 @@ class SegTree {
 int main() {
 
     #ifndef ONLINE_JUDGE
-        // freopen("input.txt", "r", stdin);
+        // freopen("../input.txt", "r", stdin);
         freopen("../output.txt", "w", stdout);
     #endif
 

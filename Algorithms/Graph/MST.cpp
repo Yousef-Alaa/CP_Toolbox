@@ -2,6 +2,7 @@
 
 using namespace std;
 #define ll long long
+#define all(v) v.begin(),v.end()
 
 typedef vector<int> vint;
 typedef vector<long long> vll;

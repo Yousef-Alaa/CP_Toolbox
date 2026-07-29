@@ -38,6 +38,7 @@ void topoSortLex() {
     priority_queue<int, vector<int>, greater<int>> pq;
 
     int u, v, m;
+    cin >> m;
     for (int i = 0; i < m; i++) {
         cin >> u >> v;
         adj[u].push_back(v);

@@ -123,7 +123,7 @@ vector<int> linearSieve() {
 pair<vector<bool>, vector<int>> bigSieve() {
     
     const int Q = 17;
-    const int L = 1 << 15
+    const int L = 1 << 15;
     static const int rs[] = {1, 7, 11, 13, 17, 19, 23, 29};
     struct P { 
         P(int p) : p(p) {}

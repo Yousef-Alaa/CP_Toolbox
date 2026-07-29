@@ -59,11 +59,39 @@ double getSqrt(ll n) {
 
 }
 
+// Ternary Search on Integer Domain (Finds x in [l, r] that maximizes f(x))
+// Change f(m1) < f(m2) to f(m1) > f(m2) for minimization
+ll ternarySearchInt(ll l, ll r, const function<ll(ll)> &f) {
+    while (r - l >= 3) {
+        ll m1 = l + (r - l) / 3;
+        ll m2 = r - (r - l) / 3;
+        if (f(m1) < f(m2)) l = m1; // m2 is strictly better
+        else r = m2;               // m1 is better or equal
+    }
+    ll best_x = l;
+    for (ll i = l + 1; i <= r; i++) {
+        if (f(i) > f(best_x)) best_x = i;
+    }
+    return best_x;
+}
+
+// Ternary Search on Real / Double Domain (Finds x in [l, r] that maximizes f(x))
+// Run fixed 100 iterations for high numerical precision
+double ternarySearchDouble(double l, double r, const function<double(double)> &f, int iterations = 100) {
+    for (int i = 0; i < iterations; i++) {
+        double m1 = l + (r - l) / 3.0;
+        double m2 = r - (r - l) / 3.0;
+        if (f(m1) < f(m2)) l = m1;
+        else r = m2;
+    }
+    return (l + r) / 2.0;
+}
+
 int main() {
 
     #ifndef ONLINE_JUDGE
-        // freopen("input.txt", "r", stdin);
-        freopen("output.txt", "w", stdout);
+        // freopen("../input.txt", "r", stdin);
+        freopen("../output.txt", "w", stdout);
     #endif
     
     /* 

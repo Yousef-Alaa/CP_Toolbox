@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include "MonoStack.cpp"
 using namespace std;
 template<typename T>
 class MonoDeque {
@@ -17,14 +18,14 @@ private:
 
 public:
 
-	int getMax() {
+	T getMax() {
 		if (l.empty()) return r.getMax();
 		if (r.empty()) return l.getMax();
 		return max(l.getMax(), r.getMax());
 	}
 
-	void push_front(int x) {l.push(x);}
-	void push_back(int x) {r.push(x);}
+	void push_front(const T &x) {l.push(x);}
+	void push_back(const T &x) {r.push(x);}
 	void pop_front() {
         if (l.empty()) rebalance();
         l.pop();
@@ -36,12 +37,12 @@ public:
     }
 	
 
-    int front() {
+    T front() {
         if (l.empty()) rebalance();
         return l.top();
     
     }
-	int back() {
+	T back() {
         if (r.empty()) rebalance();
         return r.top();
     
