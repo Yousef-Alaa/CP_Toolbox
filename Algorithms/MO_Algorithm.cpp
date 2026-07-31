@@ -10,7 +10,7 @@ using namespace std;
 Fast and robust Hilbert curve order finder for Mo's Algorithm
 To use it just add 'order' to query struct and sort based on it
 */
-ll gilbertOrder(int x, int y, int pow = 19, int rotate = 0) {
+ll hilbertOrder(int x, int y, int pow, int rotate) {
     if (pow == 0) return 0;
     int hpow = 1 << (pow - 1);
     int seg = (x < hpow) ? ((y < hpow) ? 0 : 3) : ((y < hpow) ? 1 : 2);
@@ -19,10 +19,16 @@ ll gilbertOrder(int x, int y, int pow = 19, int rotate = 0) {
     int nx = x & (x ^ hpow), ny = y & (y ^ hpow);
     int nrot = (rotate + rotateDelta[seg]) & 3;
     ll subSquareSize = 1LL << (2 * pow - 2);
-    ll ans = seg * subSquareSize;
-    ll add = gilbertOrder(nx, ny, pow - 1, nrot);
-    ans += (seg == 1 || seg == 2) ? add : (subSquareSize - add - 1);
-    return ans;
+    ll ordd = seg * subSquareSize;
+    ll add = hilbertOrder(nx, ny, pow - 1, nrot);
+    ordd += (seg == 1 || seg == 2) ? add : (subSquareSize - add - 1);
+    return ordd;
+}
+
+int calcHilbertPow(int max_n) const {
+    int pow = 0;
+    while ((1 << pow) < max_n) pow++;
+    return pow;
 }
 
 
@@ -30,16 +36,19 @@ int sqrtN;
 class MoAlgorithm {
 public:
     struct query {
+        ll ord;
         int l, r, q_idx, blk_idx;
 
-        query(int L = 0, int R = 0, int qi = 0) {
+        query(int L, int R, int qi, int HP = 0) {
             blk_idx = L / sqrtN;
             l = L, r = R, q_idx = qi;
+            // ord = hilbertOrder(l, r, HP, 0);
         }
 
         bool operator < (const query& rhs) const {
             if (blk_idx != rhs.blk_idx) return blk_idx < rhs.blk_idx;
             return (blk_idx & 1) ? (r < rhs.r) : (r > rhs.r);
+            // return ord < rhs.ord;
         }
     };
 
@@ -54,14 +63,15 @@ public:
         freq.resize(n + 5);
         answers.resize(m);
         queries.reserve(m);
+        // hilbertPow = calcHilbertPow(n);
     }
 
 private:
-    int ans;
-    int n, m, currL, currR;
+    ll ans;
+    int n, m, currL, currR, hilbertPow = 0;
     vector<int> freq;
     vector<int> arr;
-    vector<int> answers;
+    vector<ll> answers;
     vector<query> queries;
 
     void add(int idx) {
@@ -83,18 +93,19 @@ private:
 
 public:
     void addQuery(int l, int r){
-        queries.push_back(query(l, r, queries.size()));
+        queries.push_back(query(l, r, queries.size(), hilbertPow));
     }
 
     void process() {
         sort(all(queries));
+        currL = queries[0].l, currR = queries[0].l - 1;
         for (auto& q : queries) {
             setRange(q);
             answers[q.q_idx] = ans;
         }
     }
 
-    vector<int> getAnswers() {
+    vector<ll> getAnswers() {
         return answers;
     }
 };
@@ -132,7 +143,7 @@ int main(){
     
     mo.process();
     
-    vector<int> ans = mo.getAnswers();
+    vector<ll> ans = mo.getAnswers();
     
     for (int i = 0;i < q;i++) cout << ans[i] << '\n';
 
