@@ -22,3 +22,28 @@ ll find(ll l, ll r, ll node, ll ind) {
     return find(mid + 1, r, node * 2 + 2, ind);
 }
 ```
+
+## Max XOR
+``` cpp
+int query(int x) {
+
+    if (root->child[0] == nullptr && root->child[1] == nullptr) return x;
+
+    int ans = 0;
+
+    Node* curr = root;
+    for(int bit = LOG; bit >= 0; bit--) {
+
+        int b = (x >> bit) & 1;
+        if(curr->child[b ^ 1] == nullptr) {
+            curr = curr->child[b];
+        } 
+        else {
+            ans |= 1 << bit;
+            curr = curr->child[b ^ 1];
+        }
+        
+    }
+    return ans;
+}
+```
