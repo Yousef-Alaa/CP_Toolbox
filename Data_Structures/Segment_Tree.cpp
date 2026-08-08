@@ -201,15 +201,10 @@ class SegTree {
 
     }
 
-    ll query(int l, int r, int node, ll ans, int idx) {
-
-        ll res = merge(tree[node], ans);
-
-        if (l == r) return res;
-
-        if (idx <= mid) return query(l, mid, Left, res,idx);
-        return query(mid + 1, r, Right, res, idx);
-
+    ll query(int l, int r, int node, int idx) {
+        if (l == r) return tree[node];
+        if (idx <= mid) return merge(tree[node], query(l, mid, Left, idx));
+        return merge(tree[node], query(mid + 1, r, Right, idx));
     }
     
     public:
@@ -227,7 +222,7 @@ class SegTree {
     }
     
     ll query(int idx) {
-        return query(0, sz - 1, 0, 0, idx);
+        return query(0, sz - 1, 0, idx);
     }
     
     #undef Left
