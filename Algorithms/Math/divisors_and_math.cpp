@@ -91,6 +91,25 @@ vector<int> findDivisors(int n, bool srt = false) {
 
 }
 
+vector<int> get_divisors(int n) {
+    auto factors = primeFactorsSPF(n);
+    vector<int> divisors = {1};
+
+    for (auto [p, count] : factors) {
+        int sz = divisors.size();
+        int p_pow = 1;
+        for (int i = 0; i < count; i++) {
+            p_pow *= p;
+            for (int j = 0; j < sz; j++) {
+                divisors.push_back(divisors[j] * p_pow);
+            }
+        }
+    }
+
+    sort(divisors.begin(), divisors.end());
+    return divisors;
+}
+
 // Count Divisors for single number O(logN)
 ll countDivisors(int n) {
     

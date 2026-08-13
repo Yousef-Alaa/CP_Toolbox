@@ -93,22 +93,26 @@ Useful mathematical algorithms and combinatorics utilities.
 .
 ├── Algorithms
 │   ├── Graph
+│   │   ├── HLD.cpp
 │   │   ├── LCA.cpp
 │   │   ├── MST.cpp
+│   │   ├── Sack.cpp
 │   │   ├── shortest_paths.cpp
+│   │   ├── smallToLargeMerging.cpp
 │   │   ├── topo_sort.cpp
-│   │   └── traversals.cpp
+│   │   ├── traversals.cpp
+│   │   └── TreeQueries.md
 │   ├── Math
 │   │   ├── combinatorics.cpp
 │   │   ├── divisors_and_math.cpp
 │   │   ├── Euler_Mobius.cpp
+│   │   ├── Matrix_Exponentiation.cpp
 │   │   ├── modular_arithmetic.cpp
 │   │   └── primes_and_sieves.cpp
-│   ├── Searching
-│   │   └── BinarySearch.cpp
 │   ├── Strings
 │   │   └── Hashing.cpp
-│   └── MO_Algorithm.cpp
+│   ├── MO_Algorithm.cpp
+│   └── MO_Tree.cpp
 ├── Data_Structures
 │   ├── assets
 │   │   ├── BIT_Img1.jpg
@@ -126,10 +130,10 @@ Useful mathematical algorithms and combinatorics utilities.
 │   ├── MonoQueue.cpp
 │   ├── MonoStack.cpp
 │   ├── PST.cpp
-│   ├── Segment_Lazy.cpp
 │   ├── Segment_Tree.cpp
-│   ├── Sparse_Table_2D.cpp
+│   ├── Segment_Lazy.cpp
 │   ├── Sparse_Table.cpp
+│   ├── Sparse_Table_2D.cpp
 │   ├── Sqrt_Decomposition.cpp
 │   └── Trie.cpp
 ├── DP
@@ -141,7 +145,10 @@ Useful mathematical algorithms and combinatorics utilities.
 │   ├── Adhocs.cpp
 │   ├── Adhocs.md
 │   ├── BitMask.cpp
+│   ├── BitSet.cpp
+│   ├── Searching.cpp
 │   └── STLs.cpp
+├── Tricks.md
 ├── README.md
 ├── input.txt
 └── output.txt

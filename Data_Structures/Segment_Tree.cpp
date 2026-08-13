@@ -19,8 +19,8 @@ using namespace std;
 
 // Recursive
 class SegmentTree {
-    #define Left (node*2+1)
-    #define Right (node*2+2)
+    #define LF (node*2+1)
+    #define RT (node*2+2)
     #define mid (l+r>>1)
     
     private:
@@ -40,9 +40,9 @@ class SegmentTree {
             return;
         }
 
-        build(l, mid, Left);
-        build(mid + 1, r, Right);
-        tree[node] = merge(tree[Left], tree[Right]);
+        build(l, mid, LF);
+        build(mid + 1, r, RT);
+        tree[node] = merge(tree[LF], tree[RT]);
         
     }
     
@@ -53,10 +53,10 @@ class SegmentTree {
             return;
         }
 
-        if (idx <= mid) update(l, mid, Left, idx, val);
-        else update(mid + 1, r, Right, idx, val);
+        if (idx <= mid) update(l, mid, LF, idx, val);
+        else update(mid + 1, r, RT, idx, val);
 
-        tree[node] = merge(tree[Left], tree[Right]);
+        tree[node] = merge(tree[LF], tree[RT]);
     }
 
     ll query(int l, int r, int node, int lq, int rq) {
@@ -66,8 +66,8 @@ class SegmentTree {
         ll p1 = iden;
         ll p2 = iden;
 
-        if (lq <= mid) p1 = query(l, mid, Left, lq, rq);
-        if (rq > mid) p2 = query(mid + 1, r, Right, lq, rq);
+        if (lq <= mid) p1 = query(l, mid, LF, lq, rq);
+        if (rq > mid) p2 = query(mid + 1, r, RT, lq, rq);
 
         return merge(p1, p2);
     }
@@ -95,8 +95,8 @@ class SegmentTree {
     }
     
     
-    #undef Left
-    #undef Right
+    #undef LF
+    #undef RT
     #undef mid
 };
 
@@ -169,8 +169,8 @@ public:
 
 // Range Update, Point Query
 class SegTree {
-    #define Left (node*2+1)
-    #define Right (node*2+2)
+    #define LF (node*2+1)
+    #define RT (node*2+2)
     #define mid (l+r>>1)
     
     private:
@@ -196,15 +196,15 @@ class SegTree {
             return;
         }
 
-        if (lq <= mid) update(l, mid, Left, lq, rq, val);
-        if (rq > mid)  update(mid + 1, r, Right, lq, rq, val);
+        if (lq <= mid) update(l, mid, LF, lq, rq, val);
+        if (rq > mid)  update(mid + 1, r, RT, lq, rq, val);
 
     }
 
     ll query(int l, int r, int node, int idx) {
         if (l == r) return tree[node];
-        if (idx <= mid) return merge(tree[node], query(l, mid, Left, idx));
-        return merge(tree[node], query(mid + 1, r, Right, idx));
+        if (idx <= mid) return merge(tree[node], query(l, mid, LF, idx));
+        return merge(tree[node], query(mid + 1, r, RT, idx));
     }
     
     public:
@@ -225,8 +225,8 @@ class SegTree {
         return query(0, sz - 1, 0, idx);
     }
     
-    #undef Left
-    #undef Right
+    #undef LF
+    #undef RT
     #undef mid
 };
 

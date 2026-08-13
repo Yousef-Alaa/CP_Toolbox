@@ -5,8 +5,8 @@ using namespace std;
 
 
 class SegmentLazy {
-    #define Left (node*2+1)
-    #define Right (node*2+2)
+    #define LF (node*2+1)
+    #define RT (node*2+2)
     #define mid (l+r>>1)
     
     private:
@@ -31,8 +31,8 @@ class SegmentLazy {
         if (lazy[node] == skip_lazy) return;
 
         if (l != r) {
-            lazy[Left] = apply(lazy[Left], lazy[node]);
-            lazy[Right] = apply(lazy[Right], lazy[node]);
+            lazy[LF] = apply(lazy[LF], lazy[node]);
+            lazy[RT] = apply(lazy[RT], lazy[node]);
         }
 
         tree[node] = apply(tree[node], lazy[node]);
@@ -47,9 +47,9 @@ class SegmentLazy {
             return;
         }
 
-        build(l, mid, Left);
-        build(mid + 1, r, Right);
-        tree[node] = merge(tree[Left], tree[Right]);
+        build(l, mid, LF);
+        build(mid + 1, r, RT);
+        tree[node] = merge(tree[LF], tree[RT]);
         
     }
     
@@ -65,10 +65,10 @@ class SegmentLazy {
             return;
         }
 
-        update(l, mid, Left, lq, rq, val);
-        update(mid + 1, r, Right, lq, rq, val);
+        update(l, mid, LF, lq, rq, val);
+        update(mid + 1, r, RT, lq, rq, val);
 
-        tree[node] = merge(tree[Left], tree[Right]);
+        tree[node] = merge(tree[LF], tree[RT]);
 
     }
 
@@ -80,8 +80,8 @@ class SegmentLazy {
         ll p1 = iden;
         ll p2 = iden;
 
-        if (lq <= mid) p1 = query(l, mid, Left, lq, rq);
-        if (rq > mid)  p2 = query(mid + 1, r, Right, lq, rq);
+        if (lq <= mid) p1 = query(l, mid, LF, lq, rq);
+        if (rq > mid)  p2 = query(mid + 1, r, RT, lq, rq);
 
         return merge(p1, p2);
     }
@@ -122,8 +122,8 @@ class SegmentLazy {
     }
     
     
-    #undef Left
-    #undef Right
+    #undef LF
+    #undef RT
     #undef mid
 };
 

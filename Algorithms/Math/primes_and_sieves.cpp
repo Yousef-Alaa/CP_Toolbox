@@ -249,6 +249,41 @@ pair<vector<bool>, vector<ll>> segmentedSieve(ll Low, ll High) {
     return {isPrime, segment_primes};
 }
 
+vector<ll> segmentedSieveSPF(ll Low, ll High) {
+    // 1. Generate primes up to sqrt(High) using standard sieve
+    ll limit = sqrt(High);
+    vector<ll> primes;
+    vector<bool> mark(limit + 1, false);
+    for (ll i = 2; i <= limit; i++) {
+        if (!mark[i]) {
+            primes.push_back(i);
+            for (ll j = i * i; j <= limit; j += i) mark[j] = true;
+        }
+    }
+
+    // 2. Initialize spf[i] with the actual value (Low + i)
+    vector<ll> spf(High - Low + 1);
+    for (ll i = 0; i < spf.size(); ++i) {
+        spf[i] = Low + i;
+    }
+
+    // 3. Update SPF for range [Low, High]
+    for (ll p : primes) {
+        ll start = max(p * p, (Low + p - 1) / p * p);
+        for (ll j = start; j <= High; j += p) {
+            // Only update if it hasn't been marked by a smaller prime factor
+            if (spf[j - Low] == j) {
+                spf[j - Low] = p;
+            }
+        }
+    }
+
+    // Edge case for 1
+    if (Low == 1) spf[0] = 1;
+
+    return spf;
+}
+
 
 // Prime Factors for a single Number O(sqrt(N))
 vector<pair<int, int>> primeFactors(int n) {
