@@ -24,22 +24,18 @@ Files:
 - `Adhocs.md`
 - `STLs.cpp`
 - `BitMask.cpp`
+- `BitSet.cpp`
 
 ---
 
-## 🔍 Algorithms
-
-### Graph Utilities
-- `MST.cpp`
-- `shortest_paths.cpp`
-- `topo_sort.cpp`
+## Graph & Tree Utilities
 - `traversals.cpp`
+- `topo_sort.cpp`
+- `shortest_paths.cpp`
+- `MST.cpp`
+- `LCA.cpp`
+- `HLD.cpp`
 
-### Searching
-- `BinarySearch.cpp` (First/Last occurrence, Double BS, Integer & Double Ternary Search)
-
-### Strings
-- `Hashing.cpp`
 
 ---
 
@@ -84,6 +80,7 @@ Useful mathematical algorithms and combinatorics utilities.
 - `divisors_and_math.cpp`
 - `modular_arithmetic.cpp`
 - `Euler_Mobius.cpp`
+- `Matrix_Exponentiation.cpp`
 
 ---
 
@@ -92,16 +89,6 @@ Useful mathematical algorithms and combinatorics utilities.
 ```bash
 .
 ├── Algorithms
-│   ├── Graph
-│   │   ├── HLD.cpp
-│   │   ├── LCA.cpp
-│   │   ├── MST.cpp
-│   │   ├── Sack.cpp
-│   │   ├── shortest_paths.cpp
-│   │   ├── smallToLargeMerging.cpp
-│   │   ├── topo_sort.cpp
-│   │   ├── traversals.cpp
-│   │   └── TreeQueries.md
 │   ├── Math
 │   │   ├── combinatorics.cpp
 │   │   ├── divisors_and_math.cpp
@@ -111,8 +98,7 @@ Useful mathematical algorithms and combinatorics utilities.
 │   │   └── primes_and_sieves.cpp
 │   ├── Strings
 │   │   └── Hashing.cpp
-│   ├── MO_Algorithm.cpp
-│   └── MO_Tree.cpp
+│   └── MO_Algorithm.cpp
 ├── Data_Structures
 │   ├── assets
 │   │   ├── BIT_Img1.jpg
@@ -123,6 +109,7 @@ Useful mathematical algorithms and combinatorics utilities.
 │   ├── DSU_Parity.cpp
 │   ├── DSU_Rollback.cpp
 │   ├── Dynamic_Segment.cpp
+│   ├── Fwt_Multiset.cpp
 │   ├── Hash_Segment.cpp
 │   ├── Hash_Segment_Lazy.cpp
 │   ├── MergeSortTree.cpp
@@ -136,11 +123,22 @@ Useful mathematical algorithms and combinatorics utilities.
 │   ├── Sparse_Table_2D.cpp
 │   ├── Sqrt_Decomposition.cpp
 │   └── Trie.cpp
-├── DP
-│   ├── Dynamic Programming.pdf
-│   ├── dp.pdf
-│   ├── classic_patterns.cpp
-│   └── LIS.cpp
+├── Graph_and_Trees
+│   ├── BCC.cpp
+│   ├── HLD.cpp
+│   ├── Isomorphism.cpp
+│   ├── LCA.cpp
+│   ├── MO_Tree.cpp
+│   ├── MST.cpp
+│   ├── Sack.cpp
+│   ├── SCC.cpp
+│   ├── shortest_paths.cpp
+│   ├── smallToLargeMerging.cpp
+│   ├── topo_sort.cpp
+│   ├── traversals.cpp
+│   └── TreeQueries.md
+├── Misc
+│   └── BigInt.cpp
 ├── Techniques
 │   ├── Adhocs.cpp
 │   ├── Adhocs.md
@@ -149,7 +147,5 @@ Useful mathematical algorithms and combinatorics utilities.
 │   ├── Searching.cpp
 │   └── STLs.cpp
 ├── Tricks.md
-├── README.md
-├── input.txt
-└── output.txt
+└── README.md
 ```
