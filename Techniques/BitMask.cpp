@@ -21,9 +21,21 @@ using namespace std;
 #define countBits(n)  __builtin_popcountll(n)
 #define hammingDistance(a, b) __builtin_popcountll(a ^ b) // How many bits are different
 
+// counts how many set bits in single number n
+// restricted to a specific range of bit positions from start to end 
 int countInRange(ll n, int start, int end) { // End Included
     ll mask = ((1LL << (end+1)) - 1) ^ ((1LL << start) - 1);
     return countBits(n & mask);
+}
+
+// counts how many numbers in the range [0, n] have the k-th bit set to 1
+ll getcount(ll n, int k) {
+    ++n;
+    ll res = (n >> (k + 1)) << k;
+    if ((n >> k) & 1) {
+        res += n & ((1ll << k) - 1);
+    }
+    return res;
 }
 
 ll xorFrom0ToN(ll n) {
