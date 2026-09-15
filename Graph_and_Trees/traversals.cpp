@@ -135,3 +135,30 @@ int get_tree_center(int src = 1) {
     for (int curr = v; curr != -1; curr = p2[curr]) path.push_back(curr);
     return path[path.size() / 2]; // Return center node
 }
+
+
+// There are some nodes that must be part of the diameter
+// Diameter either pass with me (sum of 2 highest sub-trees) or don't, then diameter pass with a children
+// return pair(diameter, height)
+pair<int, int> diameter(int v, int par = -1) {
+    
+    int diam = 0;
+    int mxHeights[3] = {-1, -1, -1};    // keep 2 highest trees
+    
+    for (int ch : adj[v]) if(ch != par) {
+        
+        pair<int, int> p = diameter(ch, v);
+        diam = max(diam, p.first);
+        
+        // Keep only the 2 maximum children
+        mxHeights[0] = p.second + 1;
+        sort(mxHeights, mxHeights + 3);
+    }
+    
+    f(0, 3) if(mxHeights[i] == -1) mxHeights[i] = 0;
+    
+    diam = max(diam, mxHeights[1] + mxHeights[2]);
+    
+    return make_pair(diam, mxHeights[2]);
+    
+}
