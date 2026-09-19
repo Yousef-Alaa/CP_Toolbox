@@ -23,12 +23,17 @@ private:
         for (int v : adj[u]) {
             if (v == par) continue;
             if (disc[v] == -1) {
+                
                 ch++;
                 st.push({u, v});
                 tarjan(v, u);
                 low[u] = min(low[u], low[v]);
+                
+                // Get Art Points
                 if ((par != -1 && low[v] >= disc[u]) || (par == -1 && ch > 1)) isArt[u] = 1;
+                // Get Bridges
                 if (low[v] > disc[u]) bridges.push_back({u, v});
+                // Get BCC
                 if (low[v] >= disc[u]) {
                     vector<pint> comp;
                     while (1) {
@@ -60,14 +65,6 @@ public:
         for (int i = 1; i <= n; i++) {
             if (disc[i] == -1) {
                 tarjan(i);
-                if (!st.empty()) {
-                    vector<pint> comp;
-                    while (!st.empty()) {
-                        comp.push_back(st.top());
-                        st.pop();
-                    }
-                    bcc.push_back(comp);
-                }
             }
         }
 
@@ -80,6 +77,7 @@ public:
         return res;
     }
 
+    // Bridge Tree
     vector<vint> getTree() {
         
         int cnt = 1;
@@ -111,7 +109,36 @@ public:
             mat[id[b]].push_back(id[a]);
         }
         
-        return mat;
+        return mat; // nodes numbered from [1, mat.size() - 1] (Inclusive)
+    }
+
+    // Block But Tree
+    vector<vint> getBCT() {
+        
+        int blks = bcc.size();
+        
+        vint last(n + 1, 0);
+        vector<vint> bct(n + blks + 1);
+
+        for (int i = 0;i < blks;i++) {
+            int B = n + 1 + i;
+            for (auto [u, v] : bcc[i]) {
+                
+                if (last[u] != B) {
+                    bct[u].push_back(B);
+                    bct[B].push_back(u);
+                    last[u] = B;
+                }
+                
+                if (last[v] != B) {
+                    bct[v].push_back(B);
+                    bct[B].push_back(v);
+                    last[v] = B;
+                }
+            }
+        }
+
+        return bct;
     }
 
     bool isA(int u) { return isArt[u]; }
