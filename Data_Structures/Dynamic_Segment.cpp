@@ -5,12 +5,14 @@ using namespace std;
 
 #define ll long long
 
-const int MAX_NODES = 2e7; // Q * logU
+// Safe: DynamicSeg 1 + Q * (log2(maxU) + 2).
+// Safe: DynamicLazy 1 + 8 * Q * (log2(maxU) + 1).
+const int MAX_NODES = 2e7;
 
 struct Node {
     ll res;
-    int L = 0, R = 0;
-};
+    int L, R;
+} tree[MAX_NODES];
 
 class DynamicSeg {
 private:
@@ -18,7 +20,6 @@ private:
     ll iden = 0;
     ll max_range;
     int node_count;
-    vector<Node> tree;
 
     ll merge(ll a, ll b) {
         return a + b;
@@ -52,7 +53,7 @@ private:
     }
 
     ll query(int node, ll l, ll r, ll lq, ll rq) {
-        if (lq > r || rq < l || !node) return 0;
+        if (lq > r || rq < l || !node) return iden;
         if (lq <= l && r <= rq) return tree[node].res;
 
         ll mid = l + (r - l) / 2;
@@ -71,7 +72,6 @@ public:
         max_range = max_u;
         node_count = 0;
         root = ++node_count;
-        tree.resize(MAX_NODES);
         tree[root] = {0, 0, 0};
     }
 
@@ -97,51 +97,52 @@ public:
 struct NodeLazy {
     ll res;
     ll lazy;
-    int L = 0, R = 0;
-};
+    int L, R;
+} tree_lazy[MAX_NODES];
 
 class DynamicLazy {
 private:
     int root;
     ll max_range;
     int node_count;
-    vector<NodeLazy> tree;
+    const ll iden = 0LL;
+    const ll skip_lazy = 0LL;
 
     ll merge(ll a, ll b) {
         return a + b;
     }
 
     ll get_val(int node) {
-        return node ? tree[node].res : 0;
+        return node ? tree_lazy[node].res : iden;
     }
 
     int create_node() {
         int node = ++node_count;
-        tree[node] = {0, 0, 0, 0};
+        tree_lazy[node] = {iden, skip_lazy, 0, 0};
         return node;
     }
 
     void push(int node, ll l, ll r) {
-        if (!node || !tree[node].lazy) return;
+        if (!node || tree_lazy[node].lazy == skip_lazy) return;
 
         ll mid = l + (r - l) / 2;
 
-        if (!tree[node].L) tree[node].L = create_node();
-        if (!tree[node].R) tree[node].R = create_node();
+        if (!tree_lazy[node].L) tree_lazy[node].L = create_node();
+        if (!tree_lazy[node].R) tree_lazy[node].R = create_node();
 
-        int lc = tree[node].L;
-        int rc = tree[node].R;
-        ll lazy_val = tree[node].lazy;
+        int lc = tree_lazy[node].L;
+        int rc = tree_lazy[node].R;
+        ll lazy_val = tree_lazy[node].lazy;
 
         // Propegate to children
-        tree[lc].res += (mid - l + 1) * lazy_val;
-        tree[lc].lazy += lazy_val;
+        tree_lazy[lc].res += (mid - l + 1) * lazy_val;
+        tree_lazy[lc].lazy += lazy_val;
 
-        tree[rc].res += (r - mid) * lazy_val;
-        tree[rc].lazy += lazy_val;
+        tree_lazy[rc].res += (r - mid) * lazy_val;
+        tree_lazy[rc].lazy += lazy_val;
 
         // Reset lazy
-        tree[node].lazy = 0;
+        tree_lazy[node].lazy = skip_lazy;
     }
 
     int update(int node, ll l, ll r, ll lq, ll rq, ll val) {
@@ -149,30 +150,30 @@ private:
         if (!node) node = create_node();
 
         if (lq <= l && r <= rq) {
-            tree[node].res += (r - l + 1) * val;
-            tree[node].lazy += val;
+            tree_lazy[node].res += (r - l + 1) * val;
+            tree_lazy[node].lazy += val;
             return node;
         }
 
         push(node, l, r);
         ll mid = l + (r - l) / 2;
 
-        if (lq <= mid) tree[node].L = update(tree[node].L, l, mid, lq, rq, val);
-        if (rq > mid)  tree[node].R = update(tree[node].R, mid + 1, r, lq, rq, val);
+        if (lq <= mid) tree_lazy[node].L = update(tree_lazy[node].L, l, mid, lq, rq, val);
+        if (rq > mid)  tree_lazy[node].R = update(tree_lazy[node].R, mid + 1, r, lq, rq, val);
 
-        tree[node].res = merge(get_val(tree[node].L), get_val(tree[node].R));
+        tree_lazy[node].res = merge(get_val(tree_lazy[node].L), get_val(tree_lazy[node].R));
         return node;
     }
 
     ll query(int node, ll l, ll r, ll lq, ll rq) {
-        if (lq > r || rq < l || !node) return 0;
-        if (lq <= l && r <= rq) return tree[node].res;
+        if (lq > r || rq < l || !node) return iden;
+        if (lq <= l && r <= rq) return tree_lazy[node].res;
 
         push(node, l, r);
         ll mid = l + (r - l) / 2;
 
-        ll q1 = query(tree[node].L, l, mid, lq, rq);
-        ll q2 = query(tree[node].R, mid + 1, r, lq, rq);
+        ll q1 = query(tree_lazy[node].L, l, mid, lq, rq);
+        ll q2 = query(tree_lazy[node].R, mid + 1, r, lq, rq);
 
         return merge(q1, q2);
     }
@@ -182,7 +183,6 @@ public:
     DynamicLazy(ll max_u) {
         max_range = max_u;
         node_count = 0;
-        tree.resize(MAX_NODES);
         root = create_node();
     }
 
@@ -192,7 +192,7 @@ public:
     }
 
     ll query(ll l, ll r) {
-        if (l > r || l < 0 || r > max_range) return 0;
+        if (l > r || l < 0 || r > max_range) return iden;
         return query(root, 0, max_range, l, r);
     }
 

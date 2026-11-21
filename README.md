@@ -25,6 +25,7 @@ Files:
 - `STLs.cpp`
 - `BitMask.cpp`
 - `BitSet.cpp`
+- `Searching.cpp`
 
 ---
 
@@ -35,7 +36,13 @@ Files:
 - `MST.cpp`
 - `LCA.cpp`
 - `HLD.cpp`
-
+- `SCC.cpp`
+- `BCC.cpp`
+- `Isomorphism.cpp`
+- `MO_Tree.cpp`
+- `Sack.cpp`
+- `SmallToLargeMerging.cpp`
+- `TreeQueries.md`
 
 ---
 
@@ -55,13 +62,15 @@ Collection of essential data structures used in competitive programming.
 
 ### Range Query Structures
 - `BIT.cpp`
+- `Fwt_Multiset.cpp`
 - `Segment_Tree.cpp`
 - `Segment_Lazy.cpp`
 - `Dynamic_Segment.cpp`
 - `Hash_Segment.cpp`
 - `Hash_Segment_Lazy.cpp`
 - `MergeSortTree.cpp`
-- `PST.cpp` # Persistent Segment Tree
+- `PST.cpp` # Persistent Segment Tree (PST, PST_Lazy)
+- `PDST.cpp` # Persistent Dynamic Segment Tree
 - `Sparse_Table.cpp`
 - `Sparse_Table_2D.cpp`
 - `Sqrt_Decomposition.cpp`
@@ -116,6 +125,7 @@ Useful mathematical algorithms and combinatorics utilities.
 │   ├── MonoDeque.cpp
 │   ├── MonoQueue.cpp
 │   ├── MonoStack.cpp
+│   ├── PDST.cpp
 │   ├── PST.cpp
 │   ├── Segment_Tree.cpp
 │   ├── Segment_Lazy.cpp
@@ -133,7 +143,7 @@ Useful mathematical algorithms and combinatorics utilities.
 │   ├── Sack.cpp
 │   ├── SCC.cpp
 │   ├── shortest_paths.cpp
-│   ├── smallToLargeMerging.cpp
+│   ├── SmallToLargeMerging.cpp
 │   ├── topo_sort.cpp
 │   ├── traversals.cpp
 │   └── TreeQueries.md
